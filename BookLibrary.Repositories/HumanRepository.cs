@@ -12,15 +12,33 @@ namespace BookLibrary.Repositories
         /// <summary>
         /// 1.2.3 - Dummy objects representings humans
         /// </summary>
-        private List<Human> _humanList;
+        private readonly List<Human> _humanList;
 
         public HumanRepository()
         {
             _humanList = new List<Human>
             {
-                new Human{Id=Guid.NewGuid(),Name="Ярослав",Surname="Лопатин",Patronymic="Дмитриевич"},
-                new Human{Id=Guid.NewGuid(),Name="Наталья",Surname="Шпак",Patronymic="Алексеевна"},
-                new Human{Id=Guid.NewGuid(),Name="Кирилл",Surname="Иванов",Patronymic="Борисович"}
+                new Human
+                {
+                    Id = 3, //new Guid("cc66e001-80b8-4623-ae52-4929decfbed0"),
+                    Name ="Ярослав",
+                    Surname ="Лопатин",
+                    Patronymic ="Дмитриевич"
+                },
+                new Human
+                {
+                    Id = 1, //new Guid("31a46390-12b6-4f78-b505-52a8b2ed4865"),
+                    Name ="Наталья",
+                    Surname ="Шпак",
+                    Patronymic ="Алексеевна"
+                },
+                new Human
+                {
+                    Id = 2, //new Guid("81830a02-2b6f-49d9-9402-01a1efcd3e20"),
+                    Name ="Кирилл",
+                    Surname ="Иванов",
+                    Patronymic ="Борисович"
+                }
             };
         }
 

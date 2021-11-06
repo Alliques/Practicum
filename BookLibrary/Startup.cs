@@ -28,7 +28,9 @@ namespace BookLibrary
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddScoped<IHumanRepository, HumanRepository>();
+            services.AddSingleton<IHumanRepository, HumanRepository>();//пока singleton
+            services.AddSingleton<IBookRepository, BookRepository>();
+            services.AddAutoMapper(typeof(Startup));
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
