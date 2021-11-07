@@ -2,6 +2,8 @@
 {
     public class BookParameters
     {
-        public bool FilteringById { get; set; } = false;
+        public int? FilteringById { get; set; } = null;
+
+        public string OrderingBy { get; set; }
     }
 }

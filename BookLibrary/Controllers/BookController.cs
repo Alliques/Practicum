@@ -35,10 +35,29 @@ namespace BookLibrary.Controllers
         {
             var items = _bookRepository.FindAll();
 
-            // 1.3.1.2
-            if (bookParameters.FilteringById)
+            // 1.3.1.2 - filtering by AuthorId
+            if (bookParameters.FilteringById!=null)
             {
-                items = items.OrderBy(o=>o.Id);
+                items = items.Where(o=>o.AuthorId == bookParameters.FilteringById);
+            }
+
+            // 2.2.2 - ordering by book attributes
+            if (bookParameters.OrderingBy != null)
+            {
+                switch (bookParameters.OrderingBy)
+                {
+                    case "Author":
+                        items = items.OrderBy(o => o.Author);
+                        break;
+                    case "Genre":
+                        items = items.OrderBy(o => o.Genre);
+                        break;
+                    case "Title":
+                        items = items.OrderBy(o => o.Title);
+                        break;
+                    default:
+                        break;
+                }
             }
 
             if (items == null)
@@ -78,7 +97,7 @@ namespace BookLibrary.Controllers
         /// </summary>
         /// <param name="book">Book object</param>
         [HttpPost]
-        public IActionResult CreateHuman([FromBody] BookDto book)
+        public IActionResult CreateBook([FromBody] BookDto book)
         {
             if (book == null)
             {

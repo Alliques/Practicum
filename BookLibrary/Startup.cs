@@ -1,4 +1,5 @@
 using BookLibrary.Contracts;
+using BookLibrary.CustomMiddleware;
 using BookLibrary.Repositories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -28,18 +29,43 @@ namespace BookLibrary
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddSingleton<IHumanRepository, HumanRepository>();//пока singleton
+            //пока singleton
+            services.AddSingleton<IHumanRepository, HumanRepository>();
             services.AddSingleton<IBookRepository, BookRepository>();
+            services.AddSingleton<ICardLibraryRepository, LibraryCardRepository>();
             services.AddAutoMapper(typeof(Startup));
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "BookLibrary", Version = "v1" });
+
+                //2.2.4 - Swagger UI for authorization
+                c.AddSecurityDefinition("Authorization", new OpenApiSecurityScheme
+                {
+                    In = ParameterLocation.Header,
+                    Description = "Some description",
+                    Name = "Authorization",
+                    Type = SecuritySchemeType.ApiKey,
+                    Scheme = "Authorization"
+                });
+                c.AddSecurityRequirement(new OpenApiSecurityRequirement()
+                {
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.SecurityScheme,
+                                Id = "Authorization" }, Name = "Authorization",
+                        },
+                        new List<string>()
+                    }
+                });
             });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILogger<Startup> logger)
         {
             if (env.IsDevelopment())
             {
@@ -47,6 +73,11 @@ namespace BookLibrary
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "BookLibrary v1"));
             }
+
+            //2.2.3
+            app.UseMiddleware<AuthenticationMiddleware>();
+            //2.2.4
+            app.UseMiddleware<RequestProcessingTimeMiddleware>();
 
             app.UseHttpsRedirection();
 

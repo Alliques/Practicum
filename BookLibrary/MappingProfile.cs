@@ -10,6 +10,7 @@ namespace BookLibrary
         {
             CreateMap<HumanDto, Human>();
             CreateMap<BookDto, Book>();
+            CreateMap<LibraryCardDto, LibraryCard>();
         }
     }
 }

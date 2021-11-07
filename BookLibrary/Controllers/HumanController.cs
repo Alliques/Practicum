@@ -50,10 +50,7 @@ namespace BookLibrary.Controllers
             {
                 items = items.Where(o => _bookRepository
                 .FindAll()
-                .Any(x =>
-                x.Author.Contains(o.Name) &&
-                x.Author.Contains(o.Patronymic) &&
-                x.Author.Contains(o.Surname)));
+                .Any(x =>x.AuthorId==o.Id));
             }
 
             if (items == null)
