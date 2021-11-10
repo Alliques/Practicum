@@ -14,10 +14,10 @@ namespace BookLibrary.CustomMiddleware
     {
         private RequestDelegate _next;
         private readonly ILogger _logger;
-        public RequestProcessingTimeMiddleware(RequestDelegate next, ILoggerFactory loggerFactory)
+        public RequestProcessingTimeMiddleware(RequestDelegate next, ILogger<RequestProcessingTimeMiddleware> loggerFactory)
         {
             _next = next;
-            _logger = loggerFactory.CreateLogger<RequestProcessingTimeMiddleware>();
+            _logger = loggerFactory;
         }
         public async Task InvokeAsync(HttpContext context)
         {
