@@ -2,7 +2,7 @@
 
 namespace BookLibrary.Entites.DTO
 {
-    public class HumanDto
+    public class PersonDto
     {
         [Required(ErrorMessage = "Name is a required field.")]
         public string Name { get; set; }

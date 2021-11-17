@@ -1,13 +1,21 @@
-﻿namespace BookLibrary.Entites.Models
+﻿using System.Collections.Generic;
+
+namespace BookLibrary.Entites
 {
-    /// <summary>
-    /// 1.2.2 An object represents the book
-    /// </summary>
-    public class Book : BaseModel
+    public partial class Book
     {
+        public Book()
+        {
+            BookGenres = new HashSet<BookGenre>();
+            LibraryCards = new HashSet<LibraryCard>();
+        }
+
+        public int Id { get; set; }
         public string Title { get; set; }
         public int AuthorId { get; set; }
-        public Human Author { get; set; }
-        public string Genre { get; set; }
+
+        public virtual Author Author { get; set; }
+        public virtual ICollection<BookGenre> BookGenres { get; set; }
+        public virtual ICollection<LibraryCard> LibraryCards { get; set; }
     }
 }

@@ -3,6 +3,7 @@ using BookLibrary.CustomMiddleware;
 using BookLibrary.Repositories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -24,10 +25,10 @@ namespace BookLibrary
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            //пока singleton
-            services.AddSingleton<IHumanRepository, HumanRepository>();
-            services.AddSingleton<IBookRepository, BookRepository>();
-            services.AddSingleton<ICardLibraryRepository, LibraryCardRepository>();
+            services.AddDbContext<RepositoryContext>(opts =>
+            opts.UseSqlServer(Configuration.GetConnectionString("sqlConnection")));
+            services.AddScoped<IRepositoryManager, RepositoryManager>();
+
             services.AddAutoMapper(typeof(Startup));
             services.AddControllers();
             services.AddSwaggerGen(c =>

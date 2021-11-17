@@ -1,14 +1,15 @@
 ﻿using System;
 
-namespace BookLibrary.Entites.Models
+namespace BookLibrary.Entites
 {
-    /// <summary>
-    /// 2.1.1 - Object represents a new entry in the library card
-    /// </summary>
-    public class LibraryCard : BaseModel
+    public partial class LibraryCard
     {
-        public int HumanId { get; set; }
-        public Human Human { get; set; }
-        public DateTimeOffset Date { get; set; }
+        public int Id { get; set; }
+        public int BookId { get; set; }
+        public int PersonId { get; set; }
+        public DateTime ReceiptDate { get; set; }
+
+        public virtual Book Book { get; set; }
+        public virtual Person Person { get; set; }
     }
 }

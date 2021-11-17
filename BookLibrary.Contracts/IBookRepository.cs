@@ -1,8 +1,6 @@
-﻿using BookLibrary.Entites.Models;
-using System;
+﻿using BookLibrary.Entites;
 using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
+using System.Threading.Tasks;
 
 namespace BookLibrary.Contracts
 {
@@ -12,31 +10,29 @@ namespace BookLibrary.Contracts
         /// Find all entities
         /// </summary>
         /// <returns>Collection of entities</returns>
-        IEnumerable<Book> FindAll();
+        Task<IEnumerable<Book>> FindAllBook();
 
         /// <summary>
-        /// The method of searching for objects by any criteria 
+        /// The method of searching for Book objects by id
         /// </summary>
-        /// <param name="expression"></param>
-        /// <returns></returns>
-        IQueryable<Book> FindByCondition(Expression<Func<Book, bool>> expression);
+        Task<Book> FindBookById(int id);
 
         /// <summary>
-        /// Method for creating a new oobject
+        /// Method for creating a new Book oobject
         /// </summary>
-        /// <param name="entity">The object being created</param>
-        void Create(Book entity);
+        /// <param name="entity">The Book object being created</param>
+        void CreateBook(Book entity);
 
         /// <summary>
         /// Method for updating an object
         /// </summary>
-        /// <param name="entity">The object being updated</param>
-        void Update(Book entity);
+        /// <param name="entity">The Book object being updated</param>
+        void UpdateBook(Book entity);
 
         /// <summary>
-        /// Method for deleting object
+        /// Method for deleting Book object
         /// </summary>
-        /// <param name="entity">The object being deleting</param>
-        void Delete(Book entity);
+        /// <param name="entity">The Book object being deleting</param>
+        void DeleteBook(Book entity);
     }
 }

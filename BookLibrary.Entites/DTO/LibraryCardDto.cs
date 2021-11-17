@@ -1,5 +1,4 @@
-﻿using BookLibrary.Entites.Models;
-using System;
+﻿using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace BookLibrary.Entites.DTO

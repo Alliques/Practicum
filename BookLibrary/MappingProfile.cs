@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
+using BookLibrary.Entites;
 using BookLibrary.Entites.DTO;
-using BookLibrary.Entites.Models;
 
 namespace BookLibrary
 {
@@ -8,7 +8,7 @@ namespace BookLibrary
     {
         public MappingProfile()
         {
-            CreateMap<HumanDto, Human>();
+            CreateMap<PersonDto, Person>();
             CreateMap<BookDto, Book>();
             CreateMap<LibraryCardDto, LibraryCard>();
         }

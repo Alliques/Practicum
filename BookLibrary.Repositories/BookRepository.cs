@@ -1,47 +1,43 @@
 ﻿using BookLibrary.Contracts;
-using BookLibrary.Entites.Models;
-using System;
+using BookLibrary.Entites;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
+using System.Threading.Tasks;
 
 namespace BookLibrary.Repositories
 {
-    public class BookRepository : IBookRepository
+    public class BookRepository : RepositoryBase<Book>, IBookRepository
     {
-        /// <summary>
-        /// 1.2.3 - Dummy objects representings humans
-        /// </summary>
-        private readonly List<Book> _bookList;
+        private readonly RepositoryContext _repositoryContext;
 
-        public BookRepository()
+        public BookRepository(RepositoryContext repositoryContext) : base(repositoryContext)
         {
-            _bookList = DummyData.bookList.ToList();
+            _repositoryContext = repositoryContext;
         }
 
-        public void Create(Book entity)
+        public void CreateBook(Book entity)
         {
-            _bookList.Add(entity);
+            Create(entity);
         }
 
-        public void Delete(Book entity)
+        public void DeleteBook(Book entity)
         {
-            _bookList.Remove(entity);
+            Delete(entity);
         }
 
-        public IEnumerable<Book> FindAll()
+        public async Task<IEnumerable<Book>> FindAllBook()
         {
-            return _bookList;
+            return await _repositoryContext.Books.ToListAsync();
         }
 
-        public IQueryable<Book> FindByCondition(Expression<Func<Book, bool>> expression)
+        public async Task<Book> FindBookById(int id)
         {
-            return _bookList.Where(expression.Compile()).AsQueryable();
+            return await FindByCondition(o=>o.Id.Equals(id),false).SingleOrDefaultAsync();
         }
 
-        public void Update(Book entity)
+        public void UpdateBook(Book entity)
         {
-            throw new NotImplementedException();
+            Update(entity);
         }
     }
 }
