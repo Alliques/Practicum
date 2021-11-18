@@ -1,12 +1,9 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace Contracts
 {
-    public class BookDto
+    public class BookForCreationDto
     {
-        public int Id { get; set; }
-
         [Required(ErrorMessage = "Title is a required field.")]
         public string Title { get; set; }
 

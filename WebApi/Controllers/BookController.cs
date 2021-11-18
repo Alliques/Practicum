@@ -1,6 +1,8 @@
-﻿using AutoMapper;
+﻿using Contracts;
 using Microsoft.AspNetCore.Mvc;
-using System.Linq;
+using Services.Abstractions;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace WebApi.Controllers
 {
@@ -11,61 +13,23 @@ namespace WebApi.Controllers
     [ApiController]
     public class BookController : ControllerBase
     {
-        //private readonly IPersonRepository _humanRepository;
-        //private readonly IBookRepository _bookRepository;
-        //private readonly IMapper _mapper;
-
-        //public BookController(IPersonRepository humanRepository, IBookRepository bookRepository, IMapper mapper)
-        //{
-        //    _bookRepository = bookRepository;
-        //    _humanRepository = humanRepository;
-        //    _mapper = mapper;
-        //}
+        private readonly IServiceManager _serviceManager;
+        public BookController(IServiceManager serviceManager)
+        {
+            _serviceManager = serviceManager;
+        }
 
         ///// <summary>
         ///// 1.3.1 - Returns a list of all book
         ///// </summary>
         ///// <returns></returns>
-        //[HttpGet]
-        //public IActionResult GetAllBook([FromQuery] BookParameters bookParameters)
-        //{
-        //    var items = _bookRepository.FindAll();
+        [HttpGet]
+        public async Task<IActionResult> GetAllBook([FromQuery] BookParameters bookParameters, CancellationToken cancellationToken)
+        {
+            var books = await _serviceManager.BookService.GetAllAsync(bookParameters, cancellationToken);
 
-        //    // 1.3.1.2 - filtering by AuthorId
-        //    if (bookParameters.FilteringById!=null)
-        //    {
-        //        items = items.Where(o=>o.AuthorId == bookParameters.FilteringById);
-        //    }
-
-        //    // 2.2.2 - ordering by book attributes
-        //    if (bookParameters.OrderingBy != null)
-        //    {
-        //        switch (bookParameters.OrderingBy)
-        //        {
-        //            case "Author":
-        //                items = items.OrderBy(o => o.Author);
-        //                break;
-        //            case "Genre":
-        //                items = items.OrderBy(o => o.Genre);
-        //                break;
-        //            case "Title":
-        //                items = items.OrderBy(o => o.Title);
-        //                break;
-        //            default:
-        //                break;
-        //        }
-        //    }
-
-        //    if (items == null)
-        //    {
-        //        return NotFound();
-        //    }
-        //    else
-        //    {
-        //        // 1.3.1.1
-        //        return Ok(items);
-        //    }
-        //}
+            return Ok(books);
+        }
 
         ///// <summary>
         ///// Get book by id

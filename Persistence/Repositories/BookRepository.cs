@@ -28,12 +28,12 @@ namespace Persistence.Repositories
 
         public async Task<IEnumerable<Book>> FindAllAsync(CancellationToken cancellationToken)
         {
-            return await _repositoryContext.Books.ToListAsync(cancellationToken);
+            return await _repositoryContext.Books.Include(o=>o.BookGenres).ToListAsync(cancellationToken);
         }
 
         public async Task<Book> FindByIdAsync(int id, CancellationToken cancellationToken)
         {
-            return await _repositoryContext.Books.FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
+            return await _repositoryContext.Books.Include(o => o.BookGenres).FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
         }
     }
 }

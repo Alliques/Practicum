@@ -65,7 +65,6 @@ namespace Services
             var personsDto = persons.Adapt<IEnumerable<PersonDto>>();
 
             return personsDto;
-
         }
 
         public async Task<PersonDto> GetByIdAsync(int personId, CancellationToken cancellationToken = default)
