@@ -1,6 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 
-namespace BookLibrary.Entites.DTO
+namespace Contracts
 {
     public class BookDto
     {
