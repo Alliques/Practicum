@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace BookLibrary.CustomMiddleware
+namespace WebApi.CustomMiddleware
 {
     /// <summary>
     /// 2.2.4 - Middleware for authorization

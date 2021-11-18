@@ -1,12 +1,11 @@
 ﻿using Domain.Entites;
 using Domain.Repositories;
 using Microsoft.EntityFrameworkCore;
-using Persistence;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace BookLibrary.Repositories
+namespace Persistence.Repositories
 {
     public class BookRepository : IBookRepository
     {

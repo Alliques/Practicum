@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace BookLibrary.CustomMiddleware
+namespace WebApi.CustomMiddleware
 {
     /// <summary>
     /// 2.2.3 - Request processing time logging in middleware

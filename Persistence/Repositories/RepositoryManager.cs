@@ -5,7 +5,7 @@ using Persistence.Repositories;
 using System;
 using System.Threading.Tasks;
 
-namespace BookLibrary.Repositories
+namespace Persistence.Repositories
 {
     public class RepositoryManager : IRepositoryManager
     {

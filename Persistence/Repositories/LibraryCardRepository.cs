@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 
-namespace BookLibrary.Repositories
+namespace Persistence.Repositories
 {
     //public class LibraryCardRepository : ICardLibraryRepository
     //{

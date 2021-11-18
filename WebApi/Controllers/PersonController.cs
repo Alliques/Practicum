@@ -4,7 +4,7 @@ using Services.Abstractions;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace BookLibrary.Controllers
+namespace WebApi.Controllers
 {
     /// <summary>
     /// 1.3 - The controller that is responsible for the person
