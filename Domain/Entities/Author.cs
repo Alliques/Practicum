@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Domain.Entites
 {
@@ -13,6 +14,7 @@ namespace Domain.Entites
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string MiddleName { get; set; }
+        public DateTime BirthDate { get; set; }
 
         public virtual ICollection<Book> Books { get; set; }
     }

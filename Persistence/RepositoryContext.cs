@@ -18,133 +18,105 @@ namespace Persistence
 
         public virtual DbSet<Author> Authors { get; set; }
         public virtual DbSet<Book> Books { get; set; }
-        public virtual DbSet<BookGenre> BookGenres { get; set; }
+        //public virtual DbSet<BookGenre> BookGenre { get; set; }
         public virtual DbSet<Genre> Genres { get; set; }
-        public virtual DbSet<LibraryCard> LibraryCards { get; set; }
-        public virtual DbSet<Person> Person { get; set; }
+        //public virtual DbSet<LibraryCard> LibraryCard { get; set; }
+        public virtual DbSet<Person> Persons { get; set; }
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            base.OnModelCreating(modelBuilder);
-            modelBuilder.Entity<Author>(entity =>
-            {
-                entity.ToTable("author");
+        //protected override void OnModelCreating(ModelBuilder modelBuilder)
+        //{
+        //    modelBuilder.Entity<Author>(entity =>
+        //    {
+        //        entity.ToTable("Author");
 
-                entity.Property(e => e.FirstName)
-                    .IsRequired()
-                    .HasMaxLength(20)
-                    .HasColumnName("first_name");
+        //        entity.Property(e => e.FirstName)
+        //            .IsRequired()
+        //            .HasMaxLength(20);
 
-                entity.Property(e => e.LastName)
-                    .IsRequired()
-                    .HasMaxLength(20)
-                    .HasColumnName("last_name");
+        //        entity.Property(e => e.LastName)
+        //            .IsRequired()
+        //            .HasMaxLength(20);
 
-                entity.Property(e => e.MiddleName)
-                    .HasMaxLength(20)
-                    .HasColumnName("middle_name");
-            });
+        //        entity.Property(e => e.MiddleName).HasMaxLength(20);
+        //    });
 
-            modelBuilder.Entity<Book>(entity =>
-            {
-                entity.ToTable("book");
+        //    modelBuilder.Entity<Book>(entity =>
+        //    {
+        //        entity.ToTable("Book");
 
-                entity.Property(e => e.AuthorId).HasColumnName("author_id");
+        //        entity.Property(e => e.Title)
+        //            .IsRequired()
+        //            .HasMaxLength(50);
 
-                entity.Property(e => e.Title)
-                    .IsRequired()
-                    .HasMaxLength(50)
-                    .HasColumnName("title");
+        //        entity.HasOne(d => d.Author)
+        //            .WithMany(p => p.Books)
+        //            .HasForeignKey(d => d.AuthorId)
+        //            .HasConstraintName("FK_Author_AuthorId");
+        //    });
 
-                entity.HasOne(d => d.Author)
-                    .WithMany(p => p.Books)
-                    .HasForeignKey(d => d.AuthorId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__book__author_id__662B2B3B");
-            });
+        //    modelBuilder.Entity<BookGenre>(entity =>
+        //    {
+        //        entity.HasKey(e => new { e.BookId, e.GenreId });
 
-            modelBuilder.Entity<BookGenre>(entity =>
-            {
-                entity.ToTable("book_genre");
+        //        entity.ToTable("BookGenre");
 
-                entity.Property(e => e.BookId).HasColumnName("book_id");
+        //        entity.HasOne(d => d.Book)
+        //            .WithMany(p => p.BookGenres)
+        //            .HasForeignKey(d => d.BookId)
+        //            .HasConstraintName("FK_BookGenre_BookId");
 
-                entity.Property(e => e.GenreId).HasColumnName("genre_id");
+        //        entity.HasOne(d => d.Genre)
+        //            .WithMany(p => p.BookGenres)
+        //            .HasForeignKey(d => d.GenreId)
+        //            .HasConstraintName("FK_BookGenre_GenreId");
+        //    });
 
-                entity.HasOne(d => d.Book)
-                    .WithMany(p => p.BookGenres)
-                    .HasForeignKey(d => d.BookId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__book_genr__book___6AEFE058");
+        //    modelBuilder.Entity<Genre>(entity =>
+        //    {
+        //        entity.ToTable("Genre");
 
-                entity.HasOne(d => d.Genre)
-                    .WithMany(p => p.BookGenres)
-                    .HasForeignKey(d => d.GenreId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__book_genr__genre__6BE40491");
-            });
+        //        entity.Property(e => e.GenreName)
+        //            .IsRequired()
+        //            .HasMaxLength(20);
+        //    });
 
-            modelBuilder.Entity<Genre>(entity =>
-            {
-                entity.ToTable("genre");
+        //    modelBuilder.Entity<LibraryCard>(entity =>
+        //    {
+        //        entity.ToTable("LibraryCard");
 
-                entity.Property(e => e.GenreName)
-                    .IsRequired()
-                    .HasMaxLength(20)
-                    .HasColumnName("genre_name");
-            });
+        //        entity.Property(e => e.ReceiptDate).HasColumnType("datetime");
 
-            modelBuilder.Entity<LibraryCard>(entity =>
-            {
-                entity.ToTable("library_card");
+        //        entity.HasOne(d => d.Book)
+        //            .WithMany(p => p.LibraryCards)
+        //            .HasForeignKey(d => d.BookId)
+        //            .HasConstraintName("FK__LibraryCa__BookI__4924D839");
 
-                entity.Property(e => e.BookId).HasColumnName("book_id");
+        //        entity.HasOne(d => d.Person)
+        //            .WithMany(p => p.LibraryCards)
+        //            .HasForeignKey(d => d.PersonId)
+        //            .HasConstraintName("FK__LibraryCa__Perso__4A18FC72");
+        //    });
 
-                entity.Property(e => e.PersonId).HasColumnName("person_id");
+        //    modelBuilder.Entity<Person>(entity =>
+        //    {
+        //        entity.ToTable("Person");
 
-                entity.Property(e => e.ReceiptDate)
-                    .HasColumnType("datetime")
-                    .HasColumnName("receipt_date");
+        //        entity.Property(e => e.BirthDate).HasColumnType("date");
 
-                entity.HasOne(d => d.Book)
-                    .WithMany(p => p.LibraryCards)
-                    .HasForeignKey(d => d.BookId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__library_c__book___6EC0713C");
+        //        entity.Property(e => e.FirstName)
+        //            .IsRequired()
+        //            .HasMaxLength(20);
 
-                entity.HasOne(d => d.Person)
-                    .WithMany(p => p.LibraryCards)
-                    .HasForeignKey(d => d.PersonId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__library_c__perso__6FB49575");
-            });
+        //        entity.Property(e => e.LastName)
+        //            .IsRequired()
+        //            .HasMaxLength(20);
 
-            modelBuilder.Entity<Person>(entity =>
-            {
-                entity.ToTable("person");
+        //        entity.Property(e => e.MiddleName).HasMaxLength(20);
+        //    });
 
-                entity.Property(e => e.BirthDate)
-                    .HasColumnType("date")
-                    .HasColumnName("birth_date");
+        //    OnModelCreatingPartial(modelBuilder);
+        //}
 
-                entity.Property(e => e.FirstName)
-                    .IsRequired()
-                    .HasMaxLength(20)
-                    .HasColumnName("first_name");
-
-                entity.Property(e => e.LastName)
-                    .IsRequired()
-                    .HasMaxLength(20)
-                    .HasColumnName("last_name");
-
-                entity.Property(e => e.MiddleName)
-                    .HasMaxLength(20)
-                    .HasColumnName("middle_name");
-            });
-
-           // OnModelCreatingPartial(modelBuilder);
-        }
-
-       // partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
+        //partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
     }
 }

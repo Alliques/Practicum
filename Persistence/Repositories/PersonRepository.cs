@@ -20,22 +20,22 @@ namespace Persistence.Repositories
 
         public void Create(Person entity)
         {
-            _repositoryContext.Person.Add(entity);
+            _repositoryContext.Persons.Add(entity);
         }
 
         public void Delete(Person entity)
         {
-            _repositoryContext.Person.Remove(entity);
+            _repositoryContext.Persons.Remove(entity);
         }
 
         public async Task<IEnumerable<Person>> FindAllAsync(CancellationToken cancellationToken)
         {
-            return await _repositoryContext.Person.ToListAsync(cancellationToken);
+            return await _repositoryContext.Persons.ToListAsync(cancellationToken);
         }
 
         public async Task<Person> FindByIdAsync(int id, CancellationToken cancellationToken)
         {
-            return await _repositoryContext.Person.FirstOrDefaultAsync(x=>x.Id==id, cancellationToken);
+            return await _repositoryContext.Persons.FirstOrDefaultAsync(x=>x.Id==id, cancellationToken);
         }
     }
 }

@@ -62,7 +62,7 @@ namespace Services
                         books = books.OrderBy(o => o.Author);
                         break;
                     case "Genre":
-                        books = books.OrderBy(o => o.BookGenres);
+                        books = books.OrderBy(o => o.Genres);
                         break;
                     case "Title":
                         books = books.OrderBy(o => o.Title);
