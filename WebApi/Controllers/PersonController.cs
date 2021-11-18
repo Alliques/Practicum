@@ -62,5 +62,14 @@ namespace WebApi.Controllers
 
             return NoContent();
         }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdatePerson(int id, [FromBody] PersonForUpdateDto personForUpdateDto, 
+            CancellationToken cancellationToken)
+        {
+            await _serviceManager.PersonService.UpdateAsync(id, personForUpdateDto, cancellationToken);
+
+            return CreatedAtRoute("PersonById", new { id = id }, personForUpdateDto);
+        }
     }
 }

@@ -4,6 +4,7 @@ using Domain.Exceptions;
 using Domain.Repositories;
 using Mapster;
 using Services.Abstractions;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -16,12 +17,16 @@ namespace Services
         private readonly IRepositoryManager _repositoryManager;
         public BookService(IRepositoryManager repositoryManager)
         {
-            _repositoryManager = repositoryManager;
+            _repositoryManager  = repositoryManager;
         }
 
         public async Task<BookDto> CreateAsync(BookForCreationDto bookForCreationDto, CancellationToken cancellationToken = default)
         {
             var bookEntity = bookForCreationDto.Adapt<Book>();
+            var genres = bookEntity.Genres.Select(
+                o => _repositoryManager.Genre.FindById(o.Id)).ToList();
+
+            bookEntity.Genres = genres;
 
             _repositoryManager.Book.Create(bookEntity);
 
@@ -32,14 +37,14 @@ namespace Services
 
         public async Task DeleteAsync(int bookId, CancellationToken cancellationToken = default)
         {
-            var book = await _repositoryManager.Person.FindByIdAsync(bookId, cancellationToken);
+            var book = await _repositoryManager.Book.FindByIdAsync(bookId, cancellationToken);
 
             if (book is null)
             {
                 throw new BookNotFoundException(bookId);
             }
 
-            _repositoryManager.Person.Delete(book);
+            _repositoryManager.Book.Delete(book);
 
             await _repositoryManager.UnitOfWork.SaveChangesAsync(cancellationToken);
         }
@@ -51,25 +56,6 @@ namespace Services
             if (bookParameters.FilteringById != null)
             {
                 books = books.Where(o => o.AuthorId == bookParameters.FilteringById);
-            }
-
-            // 2.2.2 - ordering by book attributes
-            if (bookParameters.OrderingBy != null)
-            {
-                switch (bookParameters.OrderingBy)
-                {
-                    case "Author":
-                        books = books.OrderBy(o => o.Author);
-                        break;
-                    case "Genre":
-                        books = books.OrderBy(o => o.Genres);
-                        break;
-                    case "Title":
-                        books = books.OrderBy(o => o.Title);
-                        break;
-                    default:
-                        break;
-                }
             }
 
             var booksDto = books.Adapt<IEnumerable<BookDto>>();

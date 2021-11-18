@@ -11,7 +11,7 @@ namespace WebApi.CustomMiddleware
     /// </summary>
     public class AuthenticationMiddleware
     {
-        private RequestDelegate _next;
+        private readonly RequestDelegate _next;
         public AuthenticationMiddleware(RequestDelegate next)
         {
             _next = next;

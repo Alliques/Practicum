@@ -31,63 +31,39 @@ namespace WebApi.Controllers
             return Ok(books);
         }
 
-        ///// <summary>
-        ///// Get book by id
-        ///// </summary>
-        ///// <param name="id"></param>
-        ///// <returns></returns>
-        //[HttpGet("{id}", Name = "BookById")]
-        //public IActionResult GetBook(int id)
-        //{
-        //    var book = _bookRepository.FindByCondition(o => o.Id == id)
-        //        .FirstOrDefault();
+        /// <summary>
+        /// Returns person by id
+        /// </summary>
+        [HttpGet("{id}", Name = "BookById")]
+        public async Task<IActionResult> GetBookById(int id, CancellationToken cancellationToken)
+        {
+            var book = await _serviceManager.BookService.GetByIdAsync(id, cancellationToken);
 
-        //    if (book == null)
-        //    {
-        //        return NotFound();
-        //    }
-        //    else
-        //    {
-        //        return Ok(book);
-        //    }
-        //}
+            return Ok(book);
+        }
 
-        ///// <summary>
-        ///// 1.3.2 - Creates new book in book list
-        ///// </summary>
-        ///// <param name="book">Book object</param>
-        //[HttpPost]
-        //public IActionResult CreateBook([FromBody] BookDto book)
-        //{
-        //    if (book == null)
-        //    {
-        //        return BadRequest("BookDTO object is null");
-        //    }
+        /// <summary>
+        /// 1.3.2 - Creates new book in book list
+        /// </summary>
+        /// <param name="book">Book object</param>
+        [HttpPost]
+        public async Task<IActionResult> CreateBook([FromBody] BookForCreationDto book)
+        {
+            var bookDto = await _serviceManager.BookService.CreateAsync(book);
 
-        //    var bookEntity = _mapper.Map<Book>(book);
-        //    bookEntity.Id = _bookRepository.FindAll().Max(o => o.Id) + 1; //Guid.NewGuid();
-        //    _bookRepository.Create(bookEntity);
+            return CreatedAtRoute("BookById", new { id = bookDto.Id }, bookDto);
+        }
 
-        //    return CreatedAtRoute("HumanById", new { id = bookEntity.Id }, bookEntity);
-        //}
+        /// <summary>
+        /// 1.3.3 - Deletes an exist book from book list
+        /// </summary>
+        /// <param name="id">Book id</param>
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteBook(int id)
+        {
+            await _serviceManager.BookService.DeleteAsync(id);
 
-        ///// <summary>
-        ///// 1.3.3 - Deletes an exist book from book list
-        ///// </summary>
-        ///// <param name="id">Book id</param>
-        //[HttpDelete("{id}")]
-        //public IActionResult DeleteBook(int id)
-        //{
-        //    var book = _bookRepository.FindByCondition(o => o.Id == id).FirstOrDefault();
-
-        //    if (book == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    _bookRepository.Delete(book);
-
-        //    return NoContent();
-        //}
+            return NoContent();
+        }
     }
 }
