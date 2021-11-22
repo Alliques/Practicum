@@ -19,11 +19,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Services.Abstractions", "Se
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Persistence", "Persistence\Persistence.csproj", "{860DDC78-28E5-479F-ABF9-CD72520D826C}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Scripts", "Scripts", "{D827A59C-ED9F-40D6-988D-520D9718B041}"
-	ProjectSection(SolutionItems) = preProject
-		C:\Users\NAU\Documents\SQL Server Management Studio\Practicum.sql = C:\Users\NAU\Documents\SQL Server Management Studio\Practicum.sql
-	EndProjectSection
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
