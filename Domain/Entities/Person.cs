@@ -1,13 +1,13 @@
-﻿using System;
+﻿using Domain.Entities;
+using System;
 using System.Collections.Generic;
 
 namespace Domain.Entites
 {
-    public partial class Person
+    public partial class Person: BaseEntity
     {
         public Person()
         {
-            //LibraryCards = new HashSet<LibraryCard>();
         }
 
         public int Id { get; set; }
@@ -16,7 +16,5 @@ namespace Domain.Entites
         public string LastName { get; set; }
         public string MiddleName { get; set; }
         public List<Book> Books { get; set; }
-
-        //public virtual ICollection<LibraryCard> LibraryCards { get; set; }
     }
 }

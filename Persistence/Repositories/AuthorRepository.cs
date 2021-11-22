@@ -1,10 +1,7 @@
 ﻿using Domain.Entites;
 using Domain.Repositories;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -29,9 +26,16 @@ namespace Persistence.Repositories
             _repositoryContext.Authors.Remove(entity);
         }
 
-        public async Task<IEnumerable<Author>> FindAllAsync(CancellationToken cancellationToken)
+        public async Task<IEnumerable<Author>> FindAllAsync(CancellationToken cancellationToken, bool loadBooks = false)
         {
-            return await _repositoryContext.Authors.ToListAsync(cancellationToken);
+            if (loadBooks)
+            {
+                return await _repositoryContext.Authors.Include(b=>b.Books).ToListAsync(cancellationToken);
+            }
+            else
+            {
+                return await _repositoryContext.Authors.ToListAsync(cancellationToken);
+            }
         }
 
         public async Task<Author> FindByIdAsync(int id, CancellationToken cancellationToken)

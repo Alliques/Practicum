@@ -30,6 +30,8 @@ namespace Services
 
             bookEntity.Genres = genres;
             bookEntity.Author = author;
+            bookEntity.ChangingDate = System.DateTimeOffset.Now;
+            bookEntity.CreationDate = System.DateTimeOffset.Now;
 
             _repositoryManager.Book.Create(bookEntity);
 
@@ -115,7 +117,7 @@ namespace Services
 
             var genres = bookForUpdateDto.GenreIds.Distinct()
                 .Select(o => _repositoryManager.Genre.FindById(o));
-
+            
             var author = await _repositoryManager.Author.FindByIdAsync(bookForUpdateDto.AuthorId, cancellationToken);
 
             if (book is null)
@@ -123,6 +125,8 @@ namespace Services
                 throw new BookNotFoundException(bookId);
             }
 
+            book.ChangingDate = System.DateTimeOffset.Now;
+            book.Version += 1;
             book.AuthorId = author.Id;
             book.Genres = genres.ToList();
             book.Title = bookForUpdateDto.Title;

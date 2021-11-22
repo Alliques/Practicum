@@ -11,7 +11,7 @@ namespace Domain.Repositories
         /// Find all entities
         /// </summary>
         /// <returns>Collection of entities</returns>
-        Task<IEnumerable<Author>> FindAllAsync(CancellationToken cancellationToken);
+        Task<IEnumerable<Author>> FindAllAsync(CancellationToken cancellationToken, bool loadBooks = false);
 
         /// <summary>
         /// The method of searching for Authors objects by id

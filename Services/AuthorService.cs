@@ -9,6 +9,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Domain.Entites;
 using Domain.Exceptions;
+using Contracts.RequestOptions;
 
 namespace Services
 {
@@ -25,6 +26,8 @@ namespace Services
         {
 
             var author = authorForCreationDto.Adapt<Author>();
+            author.CreationDate = System.DateTimeOffset.Now;
+            author.ChangingDate = System.DateTimeOffset.Now;
 
             if (author.Books.Select(o => o.Genres).Any())
             {
@@ -87,6 +90,42 @@ namespace Services
             var authorBookDto = author.Adapt<AuthorBookDto>();
 
             return authorBookDto;
+        }
+
+        public async Task<IEnumerable<AuthorDto>> GetAllByCriteriaAsync(AuthorParameters authorOptions,
+            CancellationToken cancellationToken = default)
+        {
+            var author = await _repositoryManager.Author.FindAllAsync(cancellationToken, true);
+
+            if(!string.IsNullOrEmpty(authorOptions.WriteYear))
+            {
+                author = author.Where(o => o.Books
+                .Any(b => b.WriteDate.Year.ToString() == authorOptions.WriteYear));
+            }
+
+            if(authorOptions.OrderBy== "Ascending" || authorOptions.OrderbyAlph)
+            {
+                author = author.OrderBy(o => o.LastName);
+            }
+
+            if (authorOptions.OrderBy == "Descending")
+            {
+                author = author.OrderByDescending(o => o.LastName);
+            }
+            var authorDto = author.Adapt<IEnumerable<AuthorDto>>();
+
+            return authorDto;
+        }
+
+        public async Task<IEnumerable<AuthorDto>> GetAuthorBookSubstringAsync(string substring,
+            CancellationToken cancellationToken = default)
+        {
+            var author = await _repositoryManager.Author.FindAllAsync(cancellationToken, true);
+            author = author.Where(a => a.Books.Any(t => t.Title.Contains(substring)));
+            
+            var authorDto = author.Adapt<IEnumerable<AuthorDto>>();
+
+            return authorDto;
         }
     }
 }

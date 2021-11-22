@@ -1,9 +1,10 @@
-﻿using System;
+﻿using Domain.Entities;
+using System;
 using System.Collections.Generic;
 
 namespace Domain.Entites
 {
-    public partial class Author
+    public partial class Author: BaseEntity
     {
         public Author()
         {

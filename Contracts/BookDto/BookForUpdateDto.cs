@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace Contracts
@@ -13,5 +14,6 @@ namespace Contracts
 
         [Required(ErrorMessage = "Genre is a required field.")]
         public List<int> GenreIds { get; set; }
+        public DateTime WriteDate { get; set; }
     }
 }

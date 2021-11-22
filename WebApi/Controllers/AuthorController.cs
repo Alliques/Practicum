@@ -1,4 +1,5 @@
 ﻿using Contracts;
+using Contracts.RequestOptions;
 using Microsoft.AspNetCore.Mvc;
 using Services.Abstractions;
 using System.Threading;
@@ -24,6 +25,20 @@ namespace WebApi.Controllers
         public async Task<IActionResult> GetAllAuthors(CancellationToken cancellationToken)
         {
             var books = await _serviceManager.AuthorService.GetAllAsync(cancellationToken);
+
+            return Ok(books);
+        }
+
+        /// <summary>
+        /// 2.7.4.2 - Создать новый метод контроллера,  который будет выводить список всех авторов, у которых есть хотя бы одна книга
+        /// </summary>
+        /// <param name="parameters"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        [HttpGet("bycriteria")]
+        public async Task<IActionResult> GetAllAuthors([FromQuery] AuthorParameters parameters, CancellationToken cancellationToken)
+        {
+            var books = await _serviceManager.AuthorService.GetAllByCriteriaAsync(parameters, cancellationToken);
 
             return Ok(books);
         }
@@ -60,6 +75,19 @@ namespace WebApi.Controllers
             await _serviceManager.AuthorService.DeleteAsync(id);
 
             return Ok();
+        }
+
+        ///// <summary>
+        ///// 2.7.4.3 - создать новый метод, который будет выводить всех авторов, у которых название книги СОДЕРЖИТ 
+        ////  указанную в параметрах подстроку 
+        ///// </summary>
+        ///// <returns></returns>
+        [HttpGet("{substring}")]
+        public async Task<IActionResult> GetAllAuthors(string substring, CancellationToken cancellationToken)
+        {
+            var books = await _serviceManager.AuthorService.GetAuthorBookSubstringAsync(substring, cancellationToken);
+
+            return Ok(books);
         }
     }
 }

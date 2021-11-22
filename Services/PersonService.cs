@@ -23,6 +23,8 @@ namespace Services
             CancellationToken cancellationToken = default)
         {
             var personEntity = personForCreationDto.Adapt<Person>();
+            personEntity.CreationDate = System.DateTimeOffset.Now;
+            personEntity.ChangingDate = System.DateTimeOffset.Now;
 
             _repositoryManager.Person.Create(personEntity);
 
@@ -154,6 +156,8 @@ namespace Services
             person.FirstName = personForUpdateDto.FirstName;
             person.LastName = personForUpdateDto.LastName;
             person.MiddleName = personForUpdateDto.MiddleName;
+            person.ChangingDate = System.DateTimeOffset.Now;
+            person.Version += 1;
 
             await _repositoryManager.UnitOfWork.SaveChangesAsync(cancellationToken);
         }

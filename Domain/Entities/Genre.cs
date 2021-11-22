@@ -1,8 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using Domain.Entities;
+using System.Collections.Generic;
 
 namespace Domain.Entites
 {
-    public partial class Genre
+    public partial class Genre: BaseEntity
     {
         public Genre()
         {
