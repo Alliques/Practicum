@@ -1,32 +1,24 @@
-﻿using System;
+﻿using Domain.Entites;
+using Domain.Repositories;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 
 namespace Persistence.Repositories
 {
-    //public class LibraryCardRepository : ICardLibraryRepository
-    //{
-    //    private readonly List<LibraryCard> _libraryCards;
+    public class LibraryCardRepository : ILibraryCardRepository
+    {
+        private readonly RepositoryContext _repositoryContext;
 
-    //    public LibraryCardRepository()
-    //    {
-    //        _libraryCards = DummyData.libraryCards.ToList();
-    //    }
+        public LibraryCardRepository(RepositoryContext repositoryContext)
+        {
+            _repositoryContext = repositoryContext;
+        }
 
-    //    public IEnumerable<LibraryCard> FindAll()
-    //    {
-    //        return _libraryCards;
-    //    }
-
-    //    public void Create(LibraryCard entity)
-    //    {
-    //        _libraryCards.Add(entity);
-    //    }
-
-    //    public IQueryable<LibraryCard> FindByCondition(Expression<Func<LibraryCard, bool>> expression)
-    //    {
-    //        return _libraryCards.Where(expression.Compile()).AsQueryable();
-    //    }
-    //}
+        public void Create(LibraryCard entity)
+        {
+            _repositoryContext.LibraryCards.Add(entity);
+        }
+    }
 }

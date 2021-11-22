@@ -1,19 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
-namespace Domain.Entites
+namespace Contracts
 {
-    public partial class Author
+    public class PersonTakenBooksDto
     {
-        public Author()
-        {
-        }
-
-        public int Id { get; set; }
+        public DateTime BirthDate { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string MiddleName { get; set; }
-
-        public virtual List<Book> Books { get; set; }
+        public List<BookDto> Books { get; set; }
     }
 }

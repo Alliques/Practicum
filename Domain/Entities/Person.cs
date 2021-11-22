@@ -7,7 +7,7 @@ namespace Domain.Entites
     {
         public Person()
         {
-            LibraryCards = new HashSet<LibraryCard>();
+            //LibraryCards = new HashSet<LibraryCard>();
         }
 
         public int Id { get; set; }
@@ -15,7 +15,8 @@ namespace Domain.Entites
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string MiddleName { get; set; }
+        public List<Book> Books { get; set; }
 
-        public virtual ICollection<LibraryCard> LibraryCards { get; set; }
+        //public virtual ICollection<LibraryCard> LibraryCards { get; set; }
     }
 }

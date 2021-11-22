@@ -27,10 +27,19 @@ namespace Persistence.Repositories
             _repositoryContext.Genres.Remove(entity);
         }
 
-        public async Task<IEnumerable<Genre>> FindAllAsync(CancellationToken cancellationToken)
+        public async Task<List<Genre>> FindAllAsync(CancellationToken cancellationToken,
+            bool loadGenreBooks = false)
         {
-            return await _repositoryContext.Genres
+            if (loadGenreBooks)
+            {
+                return await _repositoryContext.Genres.Include(b => b.Books)
                 .ToListAsync(cancellationToken);
+            }
+            else
+            {
+                return await _repositoryContext.Genres
+                    .ToListAsync(cancellationToken);
+            }
         }
 
         public Genre FindById(int id)

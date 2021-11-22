@@ -11,7 +11,7 @@ namespace Domain.Repositories
         /// Find all entities
         /// </summary>
         /// <returns>Collection of entities</returns>
-        Task<IEnumerable<Genre>> FindAllAsync(CancellationToken cancellationToken);
+        Task<List<Genre>> FindAllAsync(CancellationToken cancellationToken, bool loadGenreBooks = false);
 
         /// <summary>
         /// The asynchronus method of searching for Genre objects by id

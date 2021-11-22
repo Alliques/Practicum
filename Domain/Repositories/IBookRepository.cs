@@ -29,5 +29,13 @@ namespace Domain.Repositories
         /// </summary>
         /// <param name="entity">The Book object being deleting</param>
         void Delete(Book entity);
+
+        /// <summary>
+        /// Сhecking the availability of the book from users
+        /// </summary>
+        /// <param name="bookId"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        Task<Book> GetBookWithHolders(int bookId, CancellationToken cancellationToken);
     }
 }

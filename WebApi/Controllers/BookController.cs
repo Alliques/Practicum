@@ -43,9 +43,8 @@ namespace WebApi.Controllers
         }
 
         /// <summary>
-        /// 1.3.2 - Creates new book in book list
+        /// 2.7.2.1 - Книга может быть добавлена (POST) (вместе с автором и жанром) 
         /// </summary>
-        /// <param name="book">Book object</param>
         [HttpPost]
         public async Task<IActionResult> CreateBook([FromBody] BookForCreationDto book)
         {
@@ -55,7 +54,7 @@ namespace WebApi.Controllers
         }
 
         /// <summary>
-        /// 1.3.3 - Deletes an exist book from book list
+        /// 2.7.2.2 - Книга может быть удалена из списка библиотеки 
         /// </summary>
         /// <param name="id">Book id</param>
         [HttpDelete("{id}")]
@@ -64,6 +63,18 @@ namespace WebApi.Controllers
             await _serviceManager.BookService.DeleteAsync(id);
 
             return NoContent();
+        }
+
+        /// <summary>
+        /// 2.7.1.2 - Книге можно присвоить новый жанр, или удалить один из имеющихся 
+        /// </summary>
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateBook(int id, [FromBody] BookForUpdateDto bookForUpdateDto,
+            CancellationToken cancellationToken)
+        {
+            var book = await _serviceManager.BookService.UpdateAsync(id, bookForUpdateDto, cancellationToken);
+
+            return CreatedAtRoute("BookById", new { id = id }, book);
         }
     }
 }

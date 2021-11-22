@@ -1,6 +1,8 @@
 ﻿using Domain.Entites;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -21,7 +23,7 @@ namespace Domain.Repositories
         /// <summary>
         /// The method of searching for Person objects by id
         /// </summary>
-        Task<Person> FindByIdAsync(int id, CancellationToken cancellationToken);
+        Task<Person> FindByIdAsync(int id, CancellationToken cancellationToken, bool withTakenBooks = false);
 
         /// <summary>
         /// Method for creating a new Person object
@@ -34,5 +36,18 @@ namespace Domain.Repositories
         /// </summary>
         /// <param name="entity">The Person object being deleting</param>
         void Delete(Person entity);
+
+        /// <summary>
+        /// Find by some criteria
+        /// </summary>
+        Task<IEnumerable<Person>> FindByCondition(Expression<Func<Person, bool>> expression,
+            CancellationToken cancellationToken);
+
+        /// <summary>
+        /// Find all the books taken by a person
+        /// </summary>
+        /// <param name="personId">Person id</param>
+        /// <returns>Returns person book collection</returns>
+        Task<IEnumerable<Book>> FindTakenBooks(int personId, CancellationToken cancellationToken); 
     }
 }
