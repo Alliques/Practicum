@@ -10,10 +10,10 @@ namespace WebApi.Controllers
     [ApiController]
     public class GenreController : ControllerBase
     {
-        private readonly IServiceManager _serviceManager;
-        public GenreController(IServiceManager serviceManager)
+        private readonly IGenreService _genreService;
+        public GenreController(IGenreService genreService)
         {
-            _serviceManager = serviceManager;
+            _genreService = genreService;
         }
 
         ///// <summary>
@@ -22,7 +22,7 @@ namespace WebApi.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAllAuthors()
         {
-            var books = await _serviceManager.GenreService.GetAllAsync();
+            var books = await _genreService.GetAllAsync();
 
             return Ok(books);
         }
@@ -33,7 +33,7 @@ namespace WebApi.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateGenre(GenrePresentationDto genreDto, CancellationToken cancellationToken)
         {
-            var books = await _serviceManager.GenreService.CreateAsync(genreDto);
+            var books = await _genreService.CreateAsync(genreDto);
 
             return Ok(books);
         }
@@ -44,7 +44,7 @@ namespace WebApi.Controllers
         [HttpGet("statistic")]
         public async Task<IActionResult> GetGenreStatistic()
         {
-            var statistics = await _serviceManager.GenreService.GetGenresStatistic();
+            var statistics = await _genreService.GetGenresStatistic();
 
             return Ok(statistics);
         }

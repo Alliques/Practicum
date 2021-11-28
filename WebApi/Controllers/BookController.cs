@@ -13,10 +13,10 @@ namespace WebApi.Controllers
     [ApiController]
     public class BookController : ControllerBase
     {
-        private readonly IServiceManager _serviceManager;
-        public BookController(IServiceManager serviceManager)
+        private readonly IBookService _bookService;
+        public BookController(IBookService bookService)
         {
-            _serviceManager = serviceManager;
+            _bookService = bookService;
         }
 
         ///// <summary>
@@ -26,7 +26,7 @@ namespace WebApi.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAllBook([FromQuery] BookParameters bookParameters, CancellationToken cancellationToken)
         {
-            var books = await _serviceManager.BookService.GetAllAsync(bookParameters, cancellationToken);
+            var books = await _bookService.GetAllAsync(bookParameters, cancellationToken);
 
             return Ok(books);
         }
@@ -37,7 +37,7 @@ namespace WebApi.Controllers
         [HttpGet("{id}", Name = "BookById")]
         public async Task<IActionResult> GetBookById(int id, CancellationToken cancellationToken)
         {
-            var book = await _serviceManager.BookService.GetByIdAsync(id, cancellationToken);
+            var book = await _bookService.GetByIdAsync(id, cancellationToken);
 
             return Ok(book);
         }
@@ -48,7 +48,7 @@ namespace WebApi.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateBook([FromBody] BookForCreationDto book)
         {
-            var bookDto = await _serviceManager.BookService.CreateAsync(book);
+            var bookDto = await _bookService.CreateAsync(book);
 
             return CreatedAtRoute("BookById", new { id = bookDto.Id }, bookDto);
         }
@@ -60,7 +60,7 @@ namespace WebApi.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteBook(int id)
         {
-            await _serviceManager.BookService.DeleteAsync(id);
+            await _bookService.DeleteAsync(id);
 
             return NoContent();
         }
@@ -72,7 +72,7 @@ namespace WebApi.Controllers
         public async Task<IActionResult> UpdateBook(int id, [FromBody] BookForUpdateDto bookForUpdateDto,
             CancellationToken cancellationToken)
         {
-            var book = await _serviceManager.BookService.UpdateAsync(id, bookForUpdateDto, cancellationToken);
+            var book = await _bookService.UpdateAsync(id, bookForUpdateDto, cancellationToken);
 
             return CreatedAtRoute("BookById", new { id = id }, book);
         }

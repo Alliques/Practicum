@@ -1,5 +1,6 @@
 ﻿using Domain.Entites;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -11,7 +12,7 @@ namespace Domain.Repositories
         /// Find all entities
         /// </summary>
         /// <returns>Collection of entities</returns>
-        Task<IEnumerable<Author>> FindAllAsync(CancellationToken cancellationToken, bool loadBooks = false);
+        Task<IQueryable<Author>> FindAllAsync(CancellationToken cancellationToken);
 
         /// <summary>
         /// The method of searching for Authors objects by id
@@ -22,7 +23,7 @@ namespace Domain.Repositories
         /// Method for creating a new Authors oobject
         /// </summary>
         /// <param name="entity">The Authors object being created</param>
-        void Create(Author entity);
+        Author Create(Author entity);
 
         /// <summary>
         /// Method for deleting Authors object

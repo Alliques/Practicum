@@ -12,10 +12,12 @@ namespace Services
 {
     public class GenreService: IGenreService
     {
-        private readonly IRepositoryManager _repositoryManager;
-        public GenreService(IRepositoryManager repositoryManager)
+        private readonly IGenreRepository _genreRepository;
+        private readonly IUnitOfWork _unitOfWork;
+        public GenreService(IGenreRepository genreRepository, IUnitOfWork unitOfWork)
         {
-            _repositoryManager = repositoryManager;
+            _genreRepository = genreRepository;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<GenrePresentationDto> CreateAsync(GenrePresentationDto genreDto, 
@@ -24,16 +26,16 @@ namespace Services
             var genre = genreDto.Adapt<Genre>();
             genre.CreationDate = System.DateTimeOffset.Now;
             genre.ChangingDate = System.DateTimeOffset.Now;
-            _repositoryManager.Genre.Create(genre);
+            _genreRepository.Create(genre);
 
-            await _repositoryManager.UnitOfWork.SaveChangesAsync(cancellationToken);
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
 
             return genre.Adapt<GenrePresentationDto>();
         }
 
         public async Task<IEnumerable<GenrePresentationDto>> GetAllAsync(CancellationToken cancellationToken = default)
         {
-            var books = await _repositoryManager.Genre.FindAllAsync(cancellationToken);
+            var books = await _genreRepository.FindAllAsync(cancellationToken);
             var booksDto = books.Adapt<IEnumerable<GenrePresentationDto>>();
 
             return booksDto;
@@ -41,7 +43,7 @@ namespace Services
 
         public async Task<IEnumerable<GenreStatisticDto>> GetGenresStatistic(CancellationToken cancellationToken = default)
         {
-            var genres = await _repositoryManager.Genre.FindAllAsync(cancellationToken, true);
+            var genres = await _genreRepository.FindAllAsync(cancellationToken, true);
             var statistic = genres.Select(o => new GenreStatisticDto 
             { 
                 GenreName = o.GenreName,

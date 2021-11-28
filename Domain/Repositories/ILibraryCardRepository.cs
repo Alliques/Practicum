@@ -12,6 +12,6 @@ namespace Domain.Repositories
         /// Сreating a new entry in the library card
         /// </summary>
         /// <param name="entity">The object being created</param>
-        void Create(LibraryCard entity);
+        LibraryCard Create(LibraryCard entity);
     }
 }

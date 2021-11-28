@@ -11,10 +11,10 @@ namespace WebApi.Controllers
     [ApiController]
     public class AuthorController : ControllerBase
     {
-        private readonly IServiceManager _serviceManager;
-        public AuthorController(IServiceManager serviceManager)
+        private readonly IAuthorService _authorService;
+        public AuthorController(IAuthorService authorService)
         {
-            _serviceManager = serviceManager;
+            _authorService = authorService;
         }
 
         ///// <summary>
@@ -24,7 +24,7 @@ namespace WebApi.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAllAuthors(CancellationToken cancellationToken)
         {
-            var books = await _serviceManager.AuthorService.GetAllAsync(cancellationToken);
+            var books = await _authorService.GetAllAsync(cancellationToken);
 
             return Ok(books);
         }
@@ -38,7 +38,7 @@ namespace WebApi.Controllers
         [HttpGet("bycriteria")]
         public async Task<IActionResult> GetAllAuthors([FromQuery] AuthorParameters parameters, CancellationToken cancellationToken)
         {
-            var books = await _serviceManager.AuthorService.GetAllByCriteriaAsync(parameters, cancellationToken);
+            var books = await _authorService.GetAllByCriteriaAsync(parameters, cancellationToken);
 
             return Ok(books);
         }
@@ -50,7 +50,7 @@ namespace WebApi.Controllers
         [HttpGet("books", Name = "AuthorById")]
         public async Task<IActionResult> GetAuthorBooks(int authorId, CancellationToken cancellationToken)
         {
-            var books = await _serviceManager.AuthorService.GetAuthorBooksAsync(authorId, cancellationToken);
+            var books = await _authorService.GetAuthorBooksAsync(authorId, cancellationToken);
 
             return Ok(books);
         }
@@ -61,7 +61,7 @@ namespace WebApi.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateAuthor([FromBody] AuthorForCreationDto authorForCreationDto)
         {
-            var authorDto = await _serviceManager.AuthorService.CreateAsync(authorForCreationDto);
+            var authorDto = await _authorService.CreateAsync(authorForCreationDto);
 
             return CreatedAtRoute("AuthorById", new { id = authorDto.Id }, authorDto);
         }
@@ -72,7 +72,7 @@ namespace WebApi.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteAuthor(int id)
         {
-            await _serviceManager.AuthorService.DeleteAsync(id);
+            await _authorService.DeleteAsync(id);
 
             return Ok();
         }
@@ -85,7 +85,7 @@ namespace WebApi.Controllers
         [HttpGet("{substring}")]
         public async Task<IActionResult> GetAllAuthors(string substring, CancellationToken cancellationToken)
         {
-            var books = await _serviceManager.AuthorService.GetAuthorBookSubstringAsync(substring, cancellationToken);
+            var books = await _authorService.GetAuthorBookSubstringAsync(substring, cancellationToken);
 
             return Ok(books);
         }

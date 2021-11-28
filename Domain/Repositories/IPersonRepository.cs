@@ -29,7 +29,7 @@ namespace Domain.Repositories
         /// Method for creating a new Person object
         /// </summary>
         /// <param name="entity">The object being created</param>
-        void Create(Person entity);
+        Person Create(Person entity);
 
         /// <summary>
         /// Method for deleting Person object

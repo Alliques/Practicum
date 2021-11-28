@@ -16,9 +16,11 @@ namespace Persistence.Repositories
             _repositoryContext = repositoryContext;
         }
 
-        public void Create(LibraryCard entity)
+        public LibraryCard Create(LibraryCard entity)
         {
             _repositoryContext.LibraryCards.Add(entity);
+
+            return entity;
         }
     }
 }

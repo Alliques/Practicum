@@ -17,9 +17,11 @@ namespace Persistence.Repositories
             _repositoryContext = repositoryContext;
         }
 
-        public void Create(Genre entity)
+        public Genre Create(Genre entity)
         {
             _repositoryContext.Genres.Add(entity);
+
+            return entity;
         }
 
         public void Delete(Genre entity)

@@ -10,6 +10,7 @@ using Microsoft.OpenApi.Models;
 using Persistence;
 using Services;
 using Services.Abstractions;
+using WebApi.Extentions;
 
 namespace WebApi
 {
@@ -27,8 +28,9 @@ namespace WebApi
         {
             services.AddDbContext<RepositoryContext>(opts =>
             opts.UseSqlServer(Configuration.GetConnectionString("sqlConnection")));
-            services.AddScoped<IRepositoryManager, RepositoryManager>();
-            services.AddScoped<IServiceManager, ServiceManager>();
+            services.ConfigureServices();
+            services.ConfigureRepositories();
+            
 
             services.AddAutoMapper(typeof(Startup));
             services.AddControllers();

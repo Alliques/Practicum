@@ -19,9 +19,11 @@ namespace Persistence.Repositories
             _repositoryContext = repositoryContext;
         }
 
-        public void Create(Person entity)
+        public Person Create(Person entity)
         {
             _repositoryContext.Persons.Add(entity);
+
+            return entity;
         }
 
         public void Delete(Person entity)
@@ -58,8 +60,8 @@ namespace Persistence.Repositories
         {
             return await _repositoryContext.Persons
                 .Where(p=>p.Id == personId)
-                .SelectMany(p => p.Books, (b, g) => new Book 
-                {
+                .SelectMany(p => p.Books, (b, g) => 
+                new Book {
                     Id=g.Id, 
                     Title = g.Title, 
                     Genres = g.Genres,

@@ -6,10 +6,6 @@ namespace Domain.Entites
 {
     public partial class Person: BaseEntity
     {
-        public Person()
-        {
-        }
-
         public int Id { get; set; }
         public DateTime BirthDate { get; set; }
         public string FirstName { get; set; }

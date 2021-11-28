@@ -4,7 +4,7 @@ using Domain.Repositories;
 
 namespace Persistence.Repositories
 {
-    internal sealed class UnitOfWork : IUnitOfWork
+    public class UnitOfWork : IUnitOfWork
     {
         private readonly RepositoryContext _repositoryContext;
 
@@ -13,7 +13,7 @@ namespace Persistence.Repositories
             _repositoryContext = dbContext;
         }
 
-        public  Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+        public Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
             return _repositoryContext.SaveChangesAsync(cancellationToken);
         }

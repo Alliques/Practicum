@@ -15,10 +15,14 @@ namespace Services
 {
     public class AuthorService : IAuthorService
     {
-        private readonly IRepositoryManager _repositoryManager;
-        public AuthorService(IRepositoryManager repositoryManager)
+        private readonly IAuthorRepository _authorRepository;
+        private readonly IGenreRepository _genreRepository;
+        private readonly IUnitOfWork _unitOfWork;
+        public AuthorService(IAuthorRepository authorRepository, IGenreRepository genreRepository, IUnitOfWork unitOfWork)
         {
-            _repositoryManager = repositoryManager;
+            _authorRepository = authorRepository;
+            _genreRepository = genreRepository;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<AuthorBookDto> CreateAsync(AuthorForCreationDto authorForCreationDto, 
@@ -40,20 +44,20 @@ namespace Services
 
                     for (int j = 0; j < author.Books[i].Genres.Count; j++)
                     {
-                        author.Books[i].Genres[j] = await _repositoryManager.Genre
+                        author.Books[i].Genres[j] = await _genreRepository
                             .FindByIdAsync(author.Books[i].Genres[j].Id, cancellationToken);
                     }
                 }
             }
-            _repositoryManager.Author.Create(author);
-            await _repositoryManager.UnitOfWork.SaveChangesAsync(cancellationToken);
+            _authorRepository.Create(author);
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
 
             return author.Adapt<AuthorBookDto>();
         }
 
         public async Task DeleteAsync(int authorId, CancellationToken cancellationToken = default)
         {
-            var author = await _repositoryManager.Author.FindByIdAsync(authorId, cancellationToken);
+            var author = await _authorRepository.FindByIdAsync(authorId, cancellationToken);
 
             if (author is null)
             {
@@ -65,14 +69,14 @@ namespace Services
                 throw new DeletingException($"The author with {authorId}-id has books.");
             }
 
-            _repositoryManager.Author.Delete(author);
+            _authorRepository.Delete(author);
 
-            await _repositoryManager.UnitOfWork.SaveChangesAsync(cancellationToken);
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
         }
 
         public async Task<IEnumerable<AuthorDto>> GetAllAsync(CancellationToken cancellationToken = default)
         {
-            var author = await _repositoryManager.Author.FindAllAsync(cancellationToken);
+            var author = await _authorRepository.FindAllAsync(cancellationToken);
             var authorDto = author.Adapt<IEnumerable<AuthorDto>>();
 
             return authorDto;
@@ -80,7 +84,7 @@ namespace Services
 
         public async Task<AuthorBookDto> GetAuthorBooksAsync(int authorId, CancellationToken cancellationToken = default)
         {
-            var author = await _repositoryManager.Author.FindByIdAsync(authorId, cancellationToken);
+            var author = await _authorRepository.FindByIdAsync(authorId, cancellationToken);
 
             if (author is null)
             {
@@ -95,7 +99,7 @@ namespace Services
         public async Task<IEnumerable<AuthorDto>> GetAllByCriteriaAsync(AuthorParameters authorOptions,
             CancellationToken cancellationToken = default)
         {
-            var author = await _repositoryManager.Author.FindAllAsync(cancellationToken, true);
+            var author = await _authorRepository.FindAllAsync(cancellationToken);
 
             if(!string.IsNullOrEmpty(authorOptions.WriteYear))
             {
@@ -103,12 +107,12 @@ namespace Services
                 .Any(b => b.WriteDate.Year.ToString() == authorOptions.WriteYear));
             }
 
-            if(authorOptions.OrderBy== "Ascending" || authorOptions.OrderbyAlph)
+            if(authorOptions.IsAsc || authorOptions.OrderbyAlph)
             {
                 author = author.OrderBy(o => o.LastName);
             }
 
-            if (authorOptions.OrderBy == "Descending")
+            if (!authorOptions.IsAsc)
             {
                 author = author.OrderByDescending(o => o.LastName);
             }
@@ -120,7 +124,7 @@ namespace Services
         public async Task<IEnumerable<AuthorDto>> GetAuthorBookSubstringAsync(string substring,
             CancellationToken cancellationToken = default)
         {
-            var author = await _repositoryManager.Author.FindAllAsync(cancellationToken, true);
+            var author = await _authorRepository.FindAllAsync(cancellationToken);
             author = author.Where(a => a.Books.Any(t => t.Title.Contains(substring)));
             
             var authorDto = author.Adapt<IEnumerable<AuthorDto>>();

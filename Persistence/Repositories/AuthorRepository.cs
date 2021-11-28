@@ -2,6 +2,7 @@
 using Domain.Repositories;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -16,9 +17,11 @@ namespace Persistence.Repositories
             _repositoryContext = repositoryContext;
         }
 
-        public void Create(Author entity)
+        public Author Create(Author entity)
         {
             _repositoryContext.Authors.Add(entity);
+
+            return entity;
         }
 
         public void Delete(Author entity)
@@ -26,16 +29,11 @@ namespace Persistence.Repositories
             _repositoryContext.Authors.Remove(entity);
         }
 
-        public async Task<IEnumerable<Author>> FindAllAsync(CancellationToken cancellationToken, bool loadBooks = false)
+        public async Task<IQueryable<Author>> FindAllAsync(CancellationToken cancellationToken)
         {
-            if (loadBooks)
-            {
-                return await _repositoryContext.Authors.Include(b=>b.Books).ToListAsync(cancellationToken);
-            }
-            else
-            {
-                return await _repositoryContext.Authors.ToListAsync(cancellationToken);
-            }
+            var list = await _repositoryContext.Authors.Include(b => b.Books).ToListAsync(cancellationToken);
+
+            return list.AsQueryable();
         }
 
         public async Task<Author> FindByIdAsync(int id, CancellationToken cancellationToken)

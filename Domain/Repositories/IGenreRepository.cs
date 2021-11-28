@@ -27,7 +27,7 @@ namespace Domain.Repositories
         /// Method for creating a new Genre oobject
         /// </summary>
         /// <param name="entity">The Genre object being created</param>
-        void Create(Genre entity);
+        Genre Create(Genre entity);
 
         /// <summary>
         /// Method for deleting Genre object

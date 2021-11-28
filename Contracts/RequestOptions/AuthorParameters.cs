@@ -4,6 +4,6 @@
     {
         public string WriteYear { get; set; }
         public bool OrderbyAlph { get; set; }
-        public string OrderBy { get; set; }
+        public bool IsAsc{ get; set; }
     }
 }

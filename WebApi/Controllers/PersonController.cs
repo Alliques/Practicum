@@ -14,17 +14,17 @@ namespace WebApi.Controllers
     [ApiController]
     public class PersonController : ControllerBase
     {
-        private readonly IServiceManager _serviceManager;
+        private readonly IPersonService _personService;
 
-        public PersonController(IServiceManager serviceManager)
+        public PersonController(IPersonService personService)
         {
-            _serviceManager = serviceManager;
+            _personService = personService;
         }
 
         [HttpGet]
         public async Task<IActionResult> GetAllPerson([FromQuery] PersonParametrs personParametrs, CancellationToken cancellationToken)
         {
-            var persons = await _serviceManager.PersonService.GetAllAsync(personParametrs, cancellationToken);
+            var persons = await _personService.GetAllAsync(personParametrs, cancellationToken);
 
             return Ok(persons);
         }
@@ -35,7 +35,7 @@ namespace WebApi.Controllers
         [HttpGet("{id}", Name = "PersonById")]
         public async Task<IActionResult> GetPersonById(int id, CancellationToken cancellationToken)
         {
-            var person = await _serviceManager.PersonService.GetByIdAsync(id, cancellationToken);
+            var person = await _personService.GetByIdAsync(id, cancellationToken);
             
             return Ok(person);
         }
@@ -47,7 +47,7 @@ namespace WebApi.Controllers
         [HttpPost]
         public async Task<IActionResult> CreatePerson([FromBody] PersonForCreationDto person)
         {
-            var personDto = await _serviceManager.PersonService.CreateAsync(person);
+            var personDto = await _personService.CreateAsync(person);
 
             return CreatedAtRoute("PersonById", new { id = personDto.Id }, personDto);
         }
@@ -59,7 +59,7 @@ namespace WebApi.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeletePerson(int id, CancellationToken cancellationToken)
         {
-            await _serviceManager.PersonService.DeleteAsync(id, cancellationToken);
+            await _personService.DeleteAsync(id, cancellationToken);
 
             return NoContent();
         }
@@ -70,7 +70,7 @@ namespace WebApi.Controllers
         [HttpDelete]
         public async Task<IActionResult> DeletePersonByName([FromQuery] string fullName, CancellationToken cancellationToken)
         {
-            await _serviceManager.PersonService.DeleteByFullNameAsync(fullName, cancellationToken);
+            await _personService.DeleteByFullNameAsync(fullName, cancellationToken);
 
             return Ok();
         }
@@ -82,7 +82,7 @@ namespace WebApi.Controllers
         public async Task<IActionResult> UpdatePerson(int id, [FromBody] PersonForUpdateDto personForUpdateDto, 
             CancellationToken cancellationToken)
         {
-            await _serviceManager.PersonService.UpdateAsync(id, personForUpdateDto, cancellationToken);
+            await _personService.UpdateAsync(id, personForUpdateDto, cancellationToken);
 
             return CreatedAtRoute("PersonById", new { id = id }, personForUpdateDto);
         }
@@ -93,7 +93,7 @@ namespace WebApi.Controllers
         [HttpGet("personbooks/{id}")]
         public async Task<IActionResult> GetTakenBooks(int id, CancellationToken cancellationToken)
         {
-            var person = await _serviceManager.PersonService.GetTakenBooks(id);
+            var person = await _personService.GetTakenBooks(id);
 
             return Ok(person);
         }
@@ -105,7 +105,7 @@ namespace WebApi.Controllers
         public async Task<IActionResult> GetTakenBooks(int id,[FromBody]List<BookDto> books, 
             CancellationToken cancellationToken)
         {
-            var person = await _serviceManager.PersonService.TakeBooks(id,books,cancellationToken);
+            var person = await _personService.TakeBooks(id,books,cancellationToken);
 
             return Ok(person);
         }
@@ -117,7 +117,7 @@ namespace WebApi.Controllers
         public async Task<IActionResult> ReturnBooks(int id, [FromBody] List<BookDto> books,
             CancellationToken cancellationToken)
         {
-            await _serviceManager.PersonService.ReturnTakenBooks(id, books, cancellationToken);
+            await _personService.ReturnTakenBooks(id, books, cancellationToken);
 
             return Ok();
         }

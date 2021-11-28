@@ -13,10 +13,14 @@ namespace Services
 {
     public class PersonService : IPersonService
     {
-        private readonly IRepositoryManager _repositoryManager;
-        public PersonService(IRepositoryManager repositoryManager)
+        private readonly IPersonRepository _personRepository;
+        private readonly IBookRepository _bookRepository;
+        private readonly IUnitOfWork _unitOfWork;
+        public PersonService(IPersonRepository personRepository, IUnitOfWork unitOfWork, IBookRepository bookRepository)
         {
-            _repositoryManager = repositoryManager;
+            _unitOfWork = unitOfWork;
+            _personRepository = personRepository;
+            _bookRepository = bookRepository;
         }
 
         public async Task<PersonDto> CreateAsync(PersonForCreationDto personForCreationDto, 
@@ -26,30 +30,30 @@ namespace Services
             personEntity.CreationDate = System.DateTimeOffset.Now;
             personEntity.ChangingDate = System.DateTimeOffset.Now;
 
-            _repositoryManager.Person.Create(personEntity);
+            _personRepository.Create(personEntity);
 
-            await _repositoryManager.UnitOfWork.SaveChangesAsync(cancellationToken);
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
 
             return personEntity.Adapt<PersonDto>();
         }
 
         public async Task DeleteAsync(int personId, CancellationToken cancellationToken = default)
         {
-            var owner = await _repositoryManager.Person.FindByIdAsync(personId, cancellationToken);
+            var owner = await _personRepository.FindByIdAsync(personId, cancellationToken);
 
             if (owner is null)
             {
                 throw new PersonNotFoundException(personId);
             }
 
-            _repositoryManager.Person.Delete(owner);
+            _personRepository.Delete(owner);
 
-            await _repositoryManager.UnitOfWork.SaveChangesAsync(cancellationToken);
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
         }
 
         public async Task DeleteByFullNameAsync(string fullName, CancellationToken cancellationToken = default)
         {
-            var personsToDelete = await _repositoryManager.Person.FindByCondition(o=> (fullName.Contains(o.FirstName) &&
+            var personsToDelete = await _personRepository.FindByCondition(o=> (fullName.Contains(o.FirstName) &&
             fullName.Contains(o.LastName) && (o.MiddleName != null && fullName.Contains(o.MiddleName))),
             cancellationToken);
 
@@ -60,16 +64,16 @@ namespace Services
 
             foreach (var person in personsToDelete)
             {
-                _repositoryManager.Person.Delete(person);
+                _personRepository.Delete(person);
             }
 
-            await _repositoryManager.UnitOfWork.SaveChangesAsync(cancellationToken);
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
         }
 
         public async Task<IEnumerable<PersonDto>> GetAllAsync(PersonParametrs personParametrs, 
             CancellationToken cancellationToken = default)
         {
-            var persons = await _repositoryManager.Person.FindAllAsync(cancellationToken);
+            var persons = await _personRepository.FindAllAsync(cancellationToken);
 
             if (personParametrs.SearchInName != null)
             {
@@ -81,7 +85,7 @@ namespace Services
 
             if (personParametrs.ShowWriters)
             {
-                var books = await _repositoryManager.Book.FindAllAsync(cancellationToken);
+                var books = await _bookRepository.FindAllAsync(cancellationToken);
                 persons = persons.Where(o => books.Any(x => x.AuthorId == o.Id));
             }
 
@@ -92,7 +96,7 @@ namespace Services
 
         public async Task<PersonDto> GetByIdAsync(int personId, CancellationToken cancellationToken = default)
         {
-            var person = await _repositoryManager.Person.FindByIdAsync(personId, cancellationToken);
+            var person = await _personRepository.FindByIdAsync(personId, cancellationToken);
 
             if (person is null)
             {
@@ -106,7 +110,7 @@ namespace Services
 
         public async Task<IEnumerable<BookDto>> GetTakenBooks(int id, CancellationToken cancellationToken = default)
         {
-            var list = await _repositoryManager.Person.FindTakenBooks(id, cancellationToken);
+            var list = await _personRepository.FindTakenBooks(id, cancellationToken);
 
             return list.Adapt<IEnumerable<BookDto>>();
         }
@@ -114,9 +118,9 @@ namespace Services
         public async Task<PersonTakenBooksDto> ReturnTakenBooks(int personId, IEnumerable<BookDto> books, 
             CancellationToken cancellationToken = default)
         {
-            var person = await _repositoryManager.Person.FindByIdAsync(personId, cancellationToken, true);
+            var person = await _personRepository.FindByIdAsync(personId, cancellationToken, true);
             person.Books.RemoveAll(o => books.Any(x => x.Id == o.Id));
-            await _repositoryManager.UnitOfWork.SaveChangesAsync(cancellationToken);
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
 
             return person.Adapt<PersonTakenBooksDto>();
         }
@@ -124,12 +128,12 @@ namespace Services
         public async Task<PersonTakenBooksDto> TakeBooks(int personId, IEnumerable<BookDto> books,
             CancellationToken cancellationToken = default)
         {
-            var person = await _repositoryManager.Person.FindByIdAsync(personId, cancellationToken, true);
+            var person = await _personRepository.FindByIdAsync(personId, cancellationToken, true);
             List<Book> takenBooks = new List<Book>();
 
             foreach (var book in books)
             {
-                takenBooks.Add(await _repositoryManager.Book.FindByIdAsync(book.Id, cancellationToken));
+                takenBooks.Add(await _bookRepository.FindByIdAsync(book.Id, cancellationToken));
             }
 
             if (person is null)
@@ -138,7 +142,7 @@ namespace Services
             }
 
             person.Books.AddRange(takenBooks);
-            await _repositoryManager.UnitOfWork.SaveChangesAsync(cancellationToken);
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
             
             return person.Adapt<PersonTakenBooksDto>();
         }
@@ -146,7 +150,7 @@ namespace Services
         public async Task UpdateAsync(int personId, PersonForUpdateDto personForUpdateDto,
             CancellationToken cancellationToken = default)
         {
-            var person = await _repositoryManager.Person.FindByIdAsync(personId, cancellationToken);
+            var person = await _personRepository.FindByIdAsync(personId, cancellationToken);
 
             if (person is null)
             {
@@ -159,7 +163,7 @@ namespace Services
             person.ChangingDate = System.DateTimeOffset.Now;
             person.Version += 1;
 
-            await _repositoryManager.UnitOfWork.SaveChangesAsync(cancellationToken);
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
         }
     }
 }
