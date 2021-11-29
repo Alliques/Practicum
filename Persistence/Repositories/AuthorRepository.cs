@@ -19,9 +19,10 @@ namespace Persistence.Repositories
 
         public Author Create(Author entity)
         {
-            _repositoryContext.Authors.Add(entity);
+            entity.CreationDate = System.DateTimeOffset.Now;
+            entity.ChangingDate = System.DateTimeOffset.Now;
 
-            return entity;
+            return _repositoryContext.Authors.Add(entity).Entity; 
         }
 
         public void Delete(Author entity)

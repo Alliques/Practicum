@@ -19,11 +19,10 @@ namespace Persistence.Repositories
 
         public Book Create(Book entity)
         {
-            //entity.ChangingDate = System.DateTimeOffset.Now;
-            //entity.CreationDate = System.DateTimeOffset.Now;
-            _repositoryContext.Books.Add(entity);
+            entity.ChangingDate = System.DateTimeOffset.Now;
+            entity.CreationDate = System.DateTimeOffset.Now;
 
-            return entity;
+            return _repositoryContext.Books.Add(entity).Entity;
         }
 
         public void Delete(Book entity)

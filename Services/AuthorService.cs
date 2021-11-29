@@ -30,9 +30,7 @@ namespace Services
         {
 
             var author = authorForCreationDto.Adapt<Author>();
-            author.CreationDate = System.DateTimeOffset.Now;
-            author.ChangingDate = System.DateTimeOffset.Now;
-
+            
             if (author.Books.Select(o => o.Genres).Any())
             {
                 for (int i = 0; i < author.Books.Count; i++)
