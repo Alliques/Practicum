@@ -1,4 +1,4 @@
-﻿namespace Contracts
+﻿namespace Domain.RequestOptions
 {
     public class BookParameters
     {

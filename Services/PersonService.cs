@@ -2,8 +2,10 @@
 using Domain.Entites;
 using Domain.Exceptions;
 using Domain.Repositories;
+using Domain.RequestOptions;
 using Mapster;
 using Services.Abstractions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -73,21 +75,8 @@ namespace Services
         public async Task<IEnumerable<PersonDto>> GetAllAsync(PersonParametrs personParametrs, 
             CancellationToken cancellationToken = default)
         {
-            var persons = await _personRepository.FindAllAsync(cancellationToken);
+            var persons = await _personRepository.FindAllAsync(personParametrs, cancellationToken);
 
-            if (personParametrs.SearchInName != null)
-            {
-                persons = persons.Where(o =>
-                o.FirstName.Contains(personParametrs.SearchInName) ||
-                o.LastName.Contains(personParametrs.SearchInName) ||
-                o.MiddleName.Contains(personParametrs.SearchInName));
-            }
-
-            if (personParametrs.ShowWriters)
-            {
-                var books = await _bookRepository.FindAllAsync(cancellationToken);
-                persons = persons.Where(o => books.Any(x => x.AuthorId == o.Id));
-            }
 
             var personsDto = persons.Adapt<IEnumerable<PersonDto>>();
 
@@ -160,8 +149,7 @@ namespace Services
             person.FirstName = personForUpdateDto.FirstName;
             person.LastName = personForUpdateDto.LastName;
             person.MiddleName = personForUpdateDto.MiddleName;
-            person.ChangingDate = System.DateTimeOffset.Now;
-            person.Version += 1;
+            //person.ChangingDate = System.DateTimeOffset.Now;
 
             await _unitOfWork.SaveChangesAsync(cancellationToken);
         }

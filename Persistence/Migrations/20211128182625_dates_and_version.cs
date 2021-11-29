@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Persistence.Migrations
 {
-    public partial class entitychanged : Migration
+    public partial class dates_and_version : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -21,13 +21,6 @@ namespace Persistence.Migrations
                 nullable: false,
                 defaultValue: new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)));
 
-            migrationBuilder.AddColumn<int>(
-                name: "Version",
-                table: "Persons",
-                type: "int",
-                nullable: false,
-                defaultValue: 0);
-
             migrationBuilder.AddColumn<DateTimeOffset>(
                 name: "ChangingDate",
                 table: "Genres",
@@ -42,13 +35,7 @@ namespace Persistence.Migrations
                 nullable: false,
                 defaultValue: new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)));
 
-            migrationBuilder.AddColumn<int>(
-                name: "Version",
-                table: "Genres",
-                type: "int",
-                nullable: false,
-                defaultValue: 0);
-
+       
             migrationBuilder.AddColumn<DateTimeOffset>(
                 name: "ChangingDate",
                 table: "Books",
@@ -63,12 +50,6 @@ namespace Persistence.Migrations
                 nullable: false,
                 defaultValue: new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)));
 
-            migrationBuilder.AddColumn<int>(
-                name: "Version",
-                table: "Books",
-                type: "int",
-                nullable: false,
-                defaultValue: 0);
 
             migrationBuilder.AddColumn<DateTimeOffset>(
                 name: "ChangingDate",
@@ -83,13 +64,6 @@ namespace Persistence.Migrations
                 type: "datetimeoffset",
                 nullable: false,
                 defaultValue: new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)));
-
-            migrationBuilder.AddColumn<int>(
-                name: "Version",
-                table: "Authors",
-                type: "int",
-                nullable: false,
-                defaultValue: 0);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

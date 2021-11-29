@@ -2,6 +2,7 @@
 using Domain.Entites;
 using Domain.Exceptions;
 using Domain.Repositories;
+using Domain.RequestOptions;
 using Mapster;
 using Services.Abstractions;
 using System.Collections.Generic;
@@ -126,7 +127,6 @@ namespace Services
             }
 
             book.ChangingDate = System.DateTimeOffset.Now;
-            book.Version += 1;
             book.AuthorId = author.Id;
             book.Genres = genres.ToList();
             book.Title = bookForUpdateDto.Title;

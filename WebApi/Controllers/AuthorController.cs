@@ -1,5 +1,5 @@
 ﻿using Contracts;
-using Contracts.RequestOptions;
+using Domain.RequestOptions;
 using Microsoft.AspNetCore.Mvc;
 using Services.Abstractions;
 using System.Threading;

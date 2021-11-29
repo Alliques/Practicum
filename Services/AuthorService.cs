@@ -9,7 +9,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Domain.Entites;
 using Domain.Exceptions;
-using Contracts.RequestOptions;
+using Domain.RequestOptions;
 
 namespace Services
 {

@@ -1,4 +1,4 @@
-﻿namespace Contracts.RequestOptions
+﻿namespace Domain.RequestOptions
 {
     public class AuthorParameters
     {

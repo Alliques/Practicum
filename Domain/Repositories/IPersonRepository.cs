@@ -1,4 +1,5 @@
 ﻿using Domain.Entites;
+using Domain.RequestOptions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,7 +19,7 @@ namespace Domain.Repositories
         /// Find all Person entities
         /// </summary>
         /// <returns>Collection of Person entities</returns>
-        Task<IEnumerable<Person>> FindAllAsync(CancellationToken cancellationToken);
+        Task<IEnumerable<Person>> FindAllAsync(PersonParametrs personParametrs, CancellationToken cancellationToken);
 
         /// <summary>
         /// The method of searching for Person objects by id

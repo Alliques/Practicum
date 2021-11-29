@@ -24,8 +24,8 @@ namespace Services
             CancellationToken cancellationToken = default)
         {
             var genre = genreDto.Adapt<Genre>();
-            genre.CreationDate = System.DateTimeOffset.Now;
-            genre.ChangingDate = System.DateTimeOffset.Now;
+            //genre.CreationDate = System.DateTimeOffset.Now;
+            //genre.ChangingDate = System.DateTimeOffset.Now;
             _genreRepository.Create(genre);
 
             await _unitOfWork.SaveChangesAsync(cancellationToken);

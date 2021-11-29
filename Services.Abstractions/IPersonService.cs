@@ -1,4 +1,5 @@
 ﻿using Contracts;
+using Domain.RequestOptions;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
