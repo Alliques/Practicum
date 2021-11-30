@@ -1,5 +1,7 @@
 ﻿using Domain.Entites;
 using Domain.Repositories;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Persistence;
 using Persistence.Repositories;
 using System;
@@ -33,7 +35,6 @@ namespace BookLibrary.Tests.RepositoriesTests
             {
                 IBookRepository bookRepository = new BookRepository(context);
                 createdBook = bookRepository.Create(bookCreation);
-                context.SaveChanges();
             }
 
             // Assert
@@ -44,18 +45,16 @@ namespace BookLibrary.Tests.RepositoriesTests
         public async Task DeleteBook_Test()
         {
             // Arrange
-            Book book = null;
+            EntityEntry<Book> book = null;
             // Act
             using (var context = new RepositoryContext(data.options))
             {
                 IBookRepository bookRepository = new BookRepository(context);
-                bookRepository.Delete(await bookRepository.FindByIdAsync(2, CancellationToken.None));
-                context.SaveChanges();
-                book = await bookRepository.FindByIdAsync(2, CancellationToken.None);
+                book = bookRepository.Delete(await bookRepository.FindByIdAsync(2, CancellationToken.None));
             }
 
             // Assert
-            Assert.Null(book);
+            Assert.Equal(EntityState.Deleted, book.State);
         }
 
         [Fact]

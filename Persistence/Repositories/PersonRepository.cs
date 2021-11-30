@@ -2,6 +2,7 @@
 using Domain.Repositories;
 using Domain.RequestOptions;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,16 +28,17 @@ namespace Persistence.Repositories
             return entity;
         }
 
-        public void Delete(Person entity)
+        public EntityEntry<Person> Delete(Person entity)
         {
-            _repositoryContext.Persons.Remove(entity);
+            return _repositoryContext.Persons.Remove(entity);
         }
 
-        public async Task<IEnumerable<Person>> FindAllAsync(PersonParametrs personParametrs,
+        public async Task<IQueryable<Person>> FindAllAsync(PersonParametrs personParametrs,
             CancellationToken cancellationToken)
         {
-            List<Person> persons=new List<Person>();
-            if (personParametrs.SearchInName != null)
+            List<Person> persons;
+
+            if (personParametrs.SearchInName != string.Empty)
             {
                 persons = await _repositoryContext.Persons.Where(o =>
                 o.FirstName.Contains(personParametrs.SearchInName) ||
@@ -44,12 +46,19 @@ namespace Persistence.Repositories
                 o.MiddleName.Contains(personParametrs.SearchInName))
                     .ToListAsync(cancellationToken);
             }
+            else
+            {
+                persons = await _repositoryContext.Persons.ToListAsync();
+            }
 
             if (personParametrs.ShowWriters)
             {
-                return persons.Where(o => _repositoryContext.Books.Where(b => b.AuthorId == o.Id).Any()).ToList();
+                return persons.Where(o => _repositoryContext.Books
+                .Where(b => b.AuthorId == o.Id)
+                .Any())
+                    .AsQueryable();
             }
-            return persons;
+            return persons.AsQueryable();
         }
 
         public async Task<Person> FindByIdAsync(int id, CancellationToken cancellationToken, 

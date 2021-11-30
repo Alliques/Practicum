@@ -1,6 +1,7 @@
 ﻿using Domain.Entites;
 using Domain.Repositories;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -25,9 +26,9 @@ namespace Persistence.Repositories
             return _repositoryContext.Authors.Add(entity).Entity; 
         }
 
-        public void Delete(Author entity)
+        public EntityEntry<Author> Delete(Author entity)
         {
-            _repositoryContext.Authors.Remove(entity);
+            return _repositoryContext.Authors.Remove(entity);
         }
 
         public async Task<IQueryable<Author>> FindAllAsync(CancellationToken cancellationToken)

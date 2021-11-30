@@ -1,5 +1,6 @@
 ﻿using Domain.Entites;
 using Domain.RequestOptions;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,7 +20,7 @@ namespace Domain.Repositories
         /// Find all Person entities
         /// </summary>
         /// <returns>Collection of Person entities</returns>
-        Task<IEnumerable<Person>> FindAllAsync(PersonParametrs personParametrs, CancellationToken cancellationToken);
+        Task<IQueryable<Person>> FindAllAsync(PersonParametrs personParametrs, CancellationToken cancellationToken);
 
         /// <summary>
         /// The method of searching for Person objects by id
@@ -36,7 +37,7 @@ namespace Domain.Repositories
         /// Method for deleting Person object
         /// </summary>
         /// <param name="entity">The Person object being deleting</param>
-        void Delete(Person entity);
+        EntityEntry<Person> Delete(Person entity);
 
         /// <summary>
         /// Find by some criteria

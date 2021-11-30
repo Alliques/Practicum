@@ -1,4 +1,5 @@
 ﻿using Domain.Entites;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -33,6 +34,6 @@ namespace Domain.Repositories
         /// Method for deleting Genre object
         /// </summary>
         /// <param name="entity">The Genre object being deleting</param>
-        void Delete(Genre entity);
+        EntityEntry<Genre> Delete(Genre entity);
     }
 }

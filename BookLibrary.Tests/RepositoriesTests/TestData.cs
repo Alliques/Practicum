@@ -119,6 +119,14 @@ namespace BookLibrary.Tests
                         FirstName = "Дмитрий",
                         MiddleName = "Валерьевич",
                         LastName = "Лопатин"
+                    },
+                    new Person
+                    {
+                        Id=15,
+                        BirthDate = System.DateTime.Now,
+                        FirstName = "FN_NotWriter",
+                        MiddleName = "MN_NotWriter",
+                        LastName = "LN_NotWrite"
                     });
                 #endregion
 

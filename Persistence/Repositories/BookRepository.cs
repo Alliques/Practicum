@@ -1,6 +1,7 @@
 ﻿using Domain.Entites;
 using Domain.Repositories;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -25,9 +26,9 @@ namespace Persistence.Repositories
             return _repositoryContext.Books.Add(entity).Entity;
         }
 
-        public void Delete(Book entity)
+        public EntityEntry<Book> Delete(Book entity)
         {
-            _repositoryContext.Books.Remove(entity);
+            return _repositoryContext.Books.Remove(entity);
         }
 
         public async Task<IEnumerable<Book>> FindAllAsync(CancellationToken cancellationToken)

@@ -1,5 +1,6 @@
 ﻿using Domain.Entites;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Moq;
 using Persistence;
 using Persistence.Repositories;
@@ -16,7 +17,7 @@ namespace BookLibrary.Tests.RepositoriesTests
         private readonly TestData data = TestData.GetInstance();
 
         [Fact]
-        public async Task GetAuthorBooks_ShouldReturnAuthorBooks_ByAuthorId()
+        public async Task GetAuthorBooks_ShouldReturnAuthorInstance_ByAuthorId()
         {
             // Arrange
             int itemCount = 0;
@@ -38,6 +39,7 @@ namespace BookLibrary.Tests.RepositoriesTests
         {
             // Arrange
             Author author = null;
+
             // Act
             using (var context = new RepositoryContext(data.options))
             {
@@ -66,7 +68,6 @@ namespace BookLibrary.Tests.RepositoriesTests
             {
                 AuthorRepository authorRepository = new AuthorRepository(context);
                 createdAuthor = authorRepository.Create(authorCreation);
-                context.SaveChanges();
             }
 
             // Assert
@@ -78,18 +79,16 @@ namespace BookLibrary.Tests.RepositoriesTests
         public async Task DeleteAuthor_Test()
         {
             // Arrange
-            Author author = null;
+            EntityEntry<Author> author = null;
             // Act
             using (var context = new RepositoryContext(data.options))
             {
                 AuthorRepository authorRepository = new AuthorRepository(context);
-                authorRepository.Delete(await authorRepository.FindByIdAsync(2,CancellationToken.None));
-                context.SaveChanges();
-                author = await authorRepository.FindByIdAsync(2, CancellationToken.None);
+                author = authorRepository.Delete(await authorRepository.FindByIdAsync(2,CancellationToken.None));
             }
 
             // Assert
-            Assert.Null(author);
+            Assert.Equal(EntityState.Deleted, author.State);
         }
     }
 }

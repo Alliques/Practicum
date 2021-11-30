@@ -1,4 +1,5 @@
 ﻿using Domain.Entites;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -28,7 +29,7 @@ namespace Domain.Repositories
         /// Method for deleting Book object
         /// </summary>
         /// <param name="entity">The Book object being deleting</param>
-        void Delete(Book entity);
+        EntityEntry<Book> Delete(Book entity);
 
         /// <summary>
         /// Сhecking the availability of the book from users
