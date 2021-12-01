@@ -1,4 +1,5 @@
-﻿using Domain.Entites;
+﻿using BookLibrary.Tests.Common;
+using Domain.Entites;
 using Domain.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
@@ -14,10 +15,8 @@ using Xunit;
 
 namespace BookLibrary.Tests.RepositoriesTests
 {
-    public class GenreRepositoryTests
+    public class GenreRepositoryTests : TestBase
     {
-        private readonly TestData data = TestData.GetInstance();
-
         [Fact]
         public void CreateGenre_Test_ShouldBeReturnCreatedInstance()
         {
@@ -26,14 +25,10 @@ namespace BookLibrary.Tests.RepositoriesTests
             {
                 GenreName = "Test_Genre"
             };
-            Genre createdGenre = null;
+            IGenreRepository bookRepository = new GenreRepository(Context);
 
             // Act
-            using (var context = new RepositoryContext(data.options))
-            {
-                IGenreRepository bookRepository = new GenreRepository(context);
-                createdGenre = bookRepository.Create(genreCreation);
-            }
+            var createdGenre = bookRepository.Create(genreCreation);
 
             // Assert
             Assert.NotNull(createdGenre);
@@ -43,14 +38,10 @@ namespace BookLibrary.Tests.RepositoriesTests
         public async Task DeleteGenre_Test()
         {
             // Arrange
-            EntityEntry<Genre> genre = null;
+            IGenreRepository genreRepository = new GenreRepository(Context);
 
             // Act
-            using (var context = new RepositoryContext(data.options))
-            {
-                IGenreRepository genreRepository = new GenreRepository(context);
-                genre = genreRepository.Delete(await genreRepository.FindByIdAsync(2, CancellationToken.None));
-            }
+            var genre = genreRepository.Delete(await genreRepository.FindByIdAsync(2, CancellationToken.None));
 
             // Assert
             Assert.Equal(EntityState.Deleted, genre.State);
@@ -60,15 +51,11 @@ namespace BookLibrary.Tests.RepositoriesTests
         public async Task GetGenres_ShouldReturnAllGenre()
         {
             // Arrange
-            int itemCount = 0;
+            IGenreRepository genreRepository = new GenreRepository(Context);
 
             // Act
-            using (var context = new RepositoryContext(data.options))
-            {
-                IGenreRepository genreRepository = new GenreRepository(context);
-                var genre = await genreRepository.FindAllAsync(CancellationToken.None);
-                itemCount = genre.Count;
-            }
+            var genre = await genreRepository.FindAllAsync(CancellationToken.None);
+            var itemCount = genre.Count;
 
             // Assert
             Assert.True(itemCount > 0);
@@ -78,14 +65,10 @@ namespace BookLibrary.Tests.RepositoriesTests
         public async Task GetGenreById_test()
         {
             // Arrange
-            Genre genre = null;
+            IGenreRepository genreRepository = new GenreRepository(Context);
 
             // Act
-            using (var context = new RepositoryContext(data.options))
-            {
-                IGenreRepository genreRepository = new GenreRepository(context);
-                genre = await genreRepository.FindByIdAsync(1, CancellationToken.None);
-            }
+            var genre = await genreRepository.FindByIdAsync(1, CancellationToken.None);
 
             // Assert
             Assert.NotNull(genre);

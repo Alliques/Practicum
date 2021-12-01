@@ -16,6 +16,6 @@ namespace Services.Abstractions
 
         Task<BookDto> UpdateAsync(int bookId, BookForUpdateDto bookForUpdateDto, CancellationToken cancellationToken = default);
 
-        Task DeleteAsync(int bookId, CancellationToken cancellationToken = default);
+        Task<int> DeleteAsync(int bookId, CancellationToken cancellationToken = default);
     }
 }

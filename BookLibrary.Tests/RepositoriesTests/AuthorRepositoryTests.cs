@@ -1,4 +1,5 @@
-﻿using Domain.Entites;
+﻿using BookLibrary.Tests.Common;
+using Domain.Entites;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Moq;
@@ -11,10 +12,8 @@ using Xunit;
 
 namespace BookLibrary.Tests.RepositoriesTests
 {
-    public class AuthorRepositoryTests
+    public class AuthorRepositoryTests :TestBase
     {
-
-        private readonly TestData data = TestData.GetInstance();
 
         [Fact]
         public async Task GetAuthorBooks_ShouldReturnAuthorInstance_ByAuthorId()
@@ -23,12 +22,9 @@ namespace BookLibrary.Tests.RepositoriesTests
             int itemCount = 0;
 
             // Act
-            using (var context = new RepositoryContext(data.options))
-            {
-                AuthorRepository authorRepository = new AuthorRepository(context);
-                var authorBooks = await authorRepository.FindAllAsync(CancellationToken.None);
-                itemCount = authorBooks.Count();
-            }
+            AuthorRepository authorRepository = new AuthorRepository(Context);
+            var authorBooks = await authorRepository.FindAllAsync(CancellationToken.None);
+            itemCount = authorBooks.Count();
 
             // Assert
             Assert.Equal(5, itemCount);
@@ -41,11 +37,8 @@ namespace BookLibrary.Tests.RepositoriesTests
             Author author = null;
 
             // Act
-            using (var context = new RepositoryContext(data.options))
-            {
-                AuthorRepository authorRepository = new AuthorRepository(context);
-                author = await authorRepository.FindByIdAsync(1,CancellationToken.None);
-            }
+            AuthorRepository authorRepository = new AuthorRepository(Context);
+            author = await authorRepository.FindByIdAsync(1, CancellationToken.None);
 
             // Assert
             Assert.NotNull(author);
@@ -64,11 +57,8 @@ namespace BookLibrary.Tests.RepositoriesTests
             Author createdAuthor = null;
 
             // Act
-            using (var context = new RepositoryContext(data.options))
-            {
-                AuthorRepository authorRepository = new AuthorRepository(context);
-                createdAuthor = authorRepository.Create(authorCreation);
-            }
+            AuthorRepository authorRepository = new AuthorRepository(Context);
+            createdAuthor = authorRepository.Create(authorCreation);
 
             // Assert
             Assert.NotNull(createdAuthor);
@@ -80,13 +70,11 @@ namespace BookLibrary.Tests.RepositoriesTests
         {
             // Arrange
             EntityEntry<Author> author = null;
-            // Act
-            using (var context = new RepositoryContext(data.options))
-            {
-                AuthorRepository authorRepository = new AuthorRepository(context);
-                author = authorRepository.Delete(await authorRepository.FindByIdAsync(2,CancellationToken.None));
-            }
 
+            // Act
+            AuthorRepository authorRepository = new AuthorRepository(Context);
+            author = authorRepository.Delete(await authorRepository.FindByIdAsync(2, CancellationToken.None));
+            
             // Assert
             Assert.Equal(EntityState.Deleted, author.State);
         }

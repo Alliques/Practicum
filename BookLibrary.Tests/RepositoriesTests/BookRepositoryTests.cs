@@ -1,4 +1,5 @@
-﻿using Domain.Entites;
+﻿using BookLibrary.Tests.Common;
+using Domain.Entites;
 using Domain.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
@@ -14,7 +15,7 @@ using Xunit;
 
 namespace BookLibrary.Tests.RepositoriesTests
 {
-    public class BookRepositoryTests
+    public class BookRepositoryTests : TestBase
     {
         private readonly TestData data = TestData.GetInstance();
 
@@ -28,14 +29,10 @@ namespace BookLibrary.Tests.RepositoriesTests
                 Title = "Test_Title",
                 Genres = null
             };
-            Book createdBook = null;
-
+            
             // Act
-            using (var context = new RepositoryContext(data.options))
-            {
-                IBookRepository bookRepository = new BookRepository(context);
-                createdBook = bookRepository.Create(bookCreation);
-            }
+            IBookRepository bookRepository = new BookRepository(Context);
+            var createdBook = bookRepository.Create(bookCreation);
 
             // Assert
             Assert.NotNull(createdBook);
@@ -45,14 +42,11 @@ namespace BookLibrary.Tests.RepositoriesTests
         public async Task DeleteBook_Test()
         {
             // Arrange
-            EntityEntry<Book> book = null;
+            IBookRepository bookRepository = new BookRepository(Context);
+            
             // Act
-            using (var context = new RepositoryContext(data.options))
-            {
-                IBookRepository bookRepository = new BookRepository(context);
-                book = bookRepository.Delete(await bookRepository.FindByIdAsync(2, CancellationToken.None));
-            }
-
+            var book = bookRepository.Delete(await bookRepository.FindByIdAsync(2, CancellationToken.None));
+            
             // Assert
             Assert.Equal(EntityState.Deleted, book.State);
         }
@@ -61,15 +55,11 @@ namespace BookLibrary.Tests.RepositoriesTests
         public async Task GetBooks_ShouldReturnAllrBooks()
         {
             // Arrange
-            int itemCount = 0;
+            IBookRepository bookRepository = new BookRepository(Context);
 
             // Act
-            using (var context = new RepositoryContext(data.options))
-            {
-                IBookRepository bookRepository = new BookRepository(context);
-                var books = await bookRepository.FindAllAsync(CancellationToken.None);
-                itemCount = books.Count();
-            }
+            var books = await bookRepository.FindAllAsync(CancellationToken.None);
+            var itemCount = books.Count();
 
             // Assert
             Assert.True(itemCount>0);
@@ -79,14 +69,10 @@ namespace BookLibrary.Tests.RepositoriesTests
         public async Task GetBookById_test()
         {
             // Arrange
-            Book book = null;
+            IBookRepository bookRepository = new BookRepository(Context);
 
             // Act
-            using (var context = new RepositoryContext(data.options))
-            {
-                IBookRepository bookRepository = new BookRepository(context);
-                book = await bookRepository.FindByIdAsync(1, CancellationToken.None);
-            }
+            var book = await bookRepository.FindByIdAsync(1, CancellationToken.None);
 
             // Assert
             Assert.NotNull(book);
@@ -100,14 +86,10 @@ namespace BookLibrary.Tests.RepositoriesTests
         public async Task GetBookWithHolders_Test()
         {
             // Arrange
-            Book book = null;
+            IBookRepository bookRepository = new BookRepository(Context);
 
             // Act
-            using (var context = new RepositoryContext(data.options))
-            {
-                IBookRepository bookRepository = new BookRepository(context);
-                book = await bookRepository.GetBookWithHolders(1, CancellationToken.None);
-            }
+            var book = await bookRepository.GetBookWithHolders(1, CancellationToken.None);
 
             // Assert
             Assert.NotNull(book);

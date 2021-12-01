@@ -1,4 +1,5 @@
-﻿using Domain.Entites;
+﻿using BookLibrary.Tests.Common;
+using Domain.Entites;
 using Domain.Repositories;
 using Domain.RequestOptions;
 using Microsoft.EntityFrameworkCore;
@@ -14,9 +15,8 @@ using Xunit;
 
 namespace BookLibrary.Tests.RepositoriesTests
 {
-    public class PersonRepositoryTests
+    public class PersonRepositoryTests : TestBase
     {
-        private readonly TestData data = TestData.GetInstance();
 
         [Fact]
         public void CreatePersonk_Test_ShouldBeReturnCreatedInstance()
@@ -29,14 +29,10 @@ namespace BookLibrary.Tests.RepositoriesTests
                FirstName = "FirstName_Test",
                LastName = "LastName_Test"
             };
-            Person createdPerson = null;
+            IPersonRepository bookRepository = new PersonRepository(Context);
 
             // Act
-            using (var context = new RepositoryContext(data.options))
-            {
-                IPersonRepository bookRepository = new PersonRepository(context);
-                createdPerson = bookRepository.Create(personCreation);
-            }
+            var createdPerson = bookRepository.Create(personCreation);
 
             // Assert
             Assert.NotNull(createdPerson);
@@ -46,13 +42,10 @@ namespace BookLibrary.Tests.RepositoriesTests
         public async Task DeletePerson_Test()
         {
             // Arrange
-            EntityEntry<Person> person = null;
+            IPersonRepository personeRepository = new PersonRepository(Context);
+
             // Act
-            using (var context = new RepositoryContext(data.options))
-            {
-                IPersonRepository personeRepository = new PersonRepository(context);
-                person = personeRepository.Delete(await personeRepository.FindByIdAsync(2, CancellationToken.None));
-            }
+            var person = personeRepository.Delete(await personeRepository.FindByIdAsync(2, CancellationToken.None));
 
             // Assert
             Assert.Equal(EntityState.Deleted, person.State);
@@ -62,15 +55,11 @@ namespace BookLibrary.Tests.RepositoriesTests
         public async Task GetPersons_ShouldReturnAllPerson_WithoutFilters()
         {
             // Arrange
-            int itemCount = 0;
+            IPersonRepository personRepository = new PersonRepository(Context);
 
             // Act
-            using (var context = new RepositoryContext(data.options))
-            {
-                IPersonRepository personRepository = new PersonRepository(context);
-                var books = await personRepository.FindAllAsync(new PersonParametrs(), CancellationToken.None);
-                itemCount = books.ToList().Count;
-            }
+            var books = await personRepository.FindAllAsync(new PersonParametrs(), CancellationToken.None);
+            var itemCount = books.ToList().Count;
 
             // Assert
             Assert.True(itemCount > 0);
@@ -80,19 +69,15 @@ namespace BookLibrary.Tests.RepositoriesTests
         public async Task GetPersons_ShouldReturnAllPerson_ShowWriters()
         {
             // Arrange
-            int itemCount = 0;
             var personParametrs = new PersonParametrs() 
             { 
                 ShowWriters = true 
             };
+            IPersonRepository personRepository = new PersonRepository(Context);
 
             // Act
-            using (var context = new RepositoryContext(data.options))
-            {
-                IPersonRepository personRepository = new PersonRepository(context);
-                var books = await personRepository.FindAllAsync(personParametrs, CancellationToken.None);
-                itemCount = books.ToList().Count;
-            }
+            var books = await personRepository.FindAllAsync(personParametrs, CancellationToken.None);
+            var itemCount = books.ToList().Count;
 
             // Assert
             Assert.Equal(3,itemCount);
@@ -110,13 +95,9 @@ namespace BookLibrary.Tests.RepositoriesTests
             };
 
             // Act
-            using (var context = new RepositoryContext(data.options))
-            {
-                IPersonRepository personRepository = new PersonRepository(context);
-                people = await personRepository.FindAllAsync(personParametrs, CancellationToken.None);
-                var t = people.ToList();
-                itemCount = people.ToList().Count;
-            }
+            IPersonRepository personRepository = new PersonRepository(Context);
+            people = await personRepository.FindAllAsync(personParametrs, CancellationToken.None);
+            itemCount = people.ToList().Count;
 
             // Assert
             Assert.Equal(2, itemCount);
@@ -130,14 +111,10 @@ namespace BookLibrary.Tests.RepositoriesTests
         public async Task GetPersonById_test()
         {
             // Arrange
-            Person person = null;
+            IPersonRepository personRepository = new PersonRepository(Context);
 
             // Act
-            using (var context = new RepositoryContext(data.options))
-            {
-                IPersonRepository personRepository = new PersonRepository(context);
-                person = await personRepository.FindByIdAsync(1, CancellationToken.None);
-            }
+            var person = await personRepository.FindByIdAsync(1, CancellationToken.None);
 
             // Assert
             Assert.NotNull(person);
@@ -148,17 +125,14 @@ namespace BookLibrary.Tests.RepositoriesTests
         public async Task FindTakenBooks_Test()
         {
             // Arrange
-            IEnumerable<Book> books = null;
+            IPersonRepository personRepository = new PersonRepository(Context);
 
             // Act
-            using (var context = new RepositoryContext(data.options))
-            {
-                IPersonRepository personRepository = new PersonRepository(context);
-                books = await personRepository.FindTakenBooks(1, CancellationToken.None);
-            }
+            var books = await personRepository.FindTakenBooks(1, CancellationToken.None);
 
             // Assert
             Assert.Equal(2, books.Count());
         }
+
     }
 }

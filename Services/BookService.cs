@@ -38,15 +38,13 @@ namespace Services
 
             bookEntity.Genres = genres;
             bookEntity.Author = author;
-
             _bookRepository.Create(bookEntity);
-
             await _unitOfWork.SaveChangesAsync(cancellationToken);
 
             return bookEntity.Adapt<BookDto>();
         }
 
-        public async Task DeleteAsync(int bookId, CancellationToken cancellationToken = default)
+        public async Task<int> DeleteAsync(int bookId, CancellationToken cancellationToken = default)
         {
             var book = await _bookRepository.FindByIdAsync(bookId, cancellationToken);
 
@@ -64,7 +62,7 @@ namespace Services
 
             _bookRepository.Delete(book);
 
-            await _unitOfWork.SaveChangesAsync(cancellationToken);
+            return await _unitOfWork.SaveChangesAsync(cancellationToken);
         }
 
         public async Task<IEnumerable<BookDto>> GetAllAsync(BookParameters bookParameters, CancellationToken cancellationToken = default)
