@@ -28,22 +28,23 @@ namespace Persistence.Repositories
             return entity;
         }
 
-        public EntityEntry<Person> Delete(Person entity)
+        public EntityState Delete(Person entity)
         {
-            return _repositoryContext.Persons.Remove(entity);
+            return _repositoryContext.Persons.Remove(entity).State;
         }
 
         public async Task<IQueryable<Person>> FindAllAsync(PersonParametrs personParametrs,
             CancellationToken cancellationToken)
         {
             List<Person> persons;
+            personParametrs.SearchInName = personParametrs.SearchInName.ToLower();
 
             if (personParametrs.SearchInName != string.Empty)
             {
                 persons = await _repositoryContext.Persons.Where(o =>
-                o.FirstName.Contains(personParametrs.SearchInName) ||
-                o.LastName.Contains(personParametrs.SearchInName) ||
-                o.MiddleName.Contains(personParametrs.SearchInName))
+                o.FirstName.ToLower().Contains(personParametrs.SearchInName) ||
+                o.LastName.ToLower().Contains(personParametrs.SearchInName) ||
+                o.MiddleName.ToLower().Contains(personParametrs.SearchInName))
                     .ToListAsync(cancellationToken);
             }
             else

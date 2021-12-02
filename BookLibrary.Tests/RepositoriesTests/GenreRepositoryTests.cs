@@ -41,10 +41,10 @@ namespace BookLibrary.Tests.RepositoriesTests
             IGenreRepository genreRepository = new GenreRepository(Context);
 
             // Act
-            var genre = genreRepository.Delete(await genreRepository.FindByIdAsync(2, CancellationToken.None));
+            var genreState = genreRepository.Delete(await genreRepository.FindByIdAsync(2, CancellationToken.None));
 
             // Assert
-            Assert.Equal(EntityState.Deleted, genre.State);
+            Assert.Equal(EntityState.Deleted, genreState);
         }
 
         [Fact]

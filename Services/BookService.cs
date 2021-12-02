@@ -4,6 +4,7 @@ using Domain.Exceptions;
 using Domain.Repositories;
 using Domain.RequestOptions;
 using Mapster;
+using Microsoft.EntityFrameworkCore;
 using Services.Abstractions;
 using System.Collections.Generic;
 using System.Linq;
@@ -44,7 +45,7 @@ namespace Services
             return bookEntity.Adapt<BookDto>();
         }
 
-        public async Task<int> DeleteAsync(int bookId, CancellationToken cancellationToken = default)
+        public async Task<EntityState> DeleteAsync(int bookId, CancellationToken cancellationToken = default)
         {
             var book = await _bookRepository.FindByIdAsync(bookId, cancellationToken);
 
@@ -60,9 +61,11 @@ namespace Services
                 throw new DeletingException($"Can't delete book with id: {book.Id} because there are holders.");
             }
 
-            _bookRepository.Delete(book);
+            var state = _bookRepository.Delete(book);
 
-            return await _unitOfWork.SaveChangesAsync(cancellationToken);
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
+
+            return state;
         }
 
         public async Task<IEnumerable<BookDto>> GetAllAsync(BookParameters bookParameters, CancellationToken cancellationToken = default)
@@ -77,18 +80,18 @@ namespace Services
             // 2.7.1.4 - Можно получить список всех книг с фильтром по автору 
             if (!string.IsNullOrEmpty(bookParameters.AuthName))
             {
-                books = books.Where(o => o.Author.FirstName == bookParameters.AuthName);
+                books = books.Where(o => o.Author.FirstName.ToLower() == bookParameters.AuthName.ToLower());
             }
 
             if (!string.IsNullOrEmpty(bookParameters.AuthSurname))
             {
-                books = books.Where(o => o.Author.LastName == bookParameters.AuthSurname);
+                books = books.Where(o => o.Author.LastName.ToLower() == bookParameters.AuthSurname.ToLower());
             }
 
             //2.7.1.5 - Можно получить список книг по жанру
             if (!string.IsNullOrEmpty(bookParameters.Genre))
             {
-                books = books.Where(o => o.Genres.Any(o=>o.GenreName == bookParameters.Genre));
+                books = books.Where(o => o.Genres.Any(o=>o.GenreName.ToLower() == bookParameters.Genre.ToLower()));
             }
 
             var booksDto = books.Adapt<IEnumerable<BookDto>>();

@@ -17,8 +17,6 @@ namespace BookLibrary.Tests.RepositoriesTests
 {
     public class BookRepositoryTests : TestBase
     {
-        private readonly TestData data = TestData.GetInstance();
-
         [Fact]
         public void CreateBook_Test_ShouldBeReturnCreatedInstance()
         {
@@ -45,10 +43,10 @@ namespace BookLibrary.Tests.RepositoriesTests
             IBookRepository bookRepository = new BookRepository(Context);
             
             // Act
-            var book = bookRepository.Delete(await bookRepository.FindByIdAsync(2, CancellationToken.None));
+            var bookState = bookRepository.Delete(await bookRepository.FindByIdAsync(2, CancellationToken.None));
             
             // Assert
-            Assert.Equal(EntityState.Deleted, book.State);
+            Assert.Equal(EntityState.Deleted, bookState);
         }
 
         [Fact]

@@ -14,48 +14,118 @@ using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
 using BookLibrary.Tests.Common;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Microsoft.EntityFrameworkCore;
+using Persistence.Repositories;
+using Domain.RequestOptions;
 
 namespace BookLibrary.Tests.ServicesTests
 {
     public class AuthorServiceTests : TestBase
     {
         private readonly AuthorService _authorService;
-        private readonly Mock<IAuthorRepository> _authorRepoMock = new Mock<IAuthorRepository>();
-        private readonly Mock<IGenreRepository> _genreRepoMock = new Mock<IGenreRepository>();
-        private readonly Mock<IUnitOfWork> _uowRepoMock = new Mock<IUnitOfWork>();
-        private readonly TestData data = TestData.GetInstance();
-
+        private readonly IAuthorRepository _authorRepo;
+        private readonly IGenreRepository _genreRepo;
+        private readonly IUnitOfWork _uowRepo;
+        
         public AuthorServiceTests()
         {
-            _authorService = new AuthorService(_authorRepoMock.Object, _genreRepoMock.Object, _uowRepoMock.Object);
+            _authorRepo = new AuthorRepository(Context);
+            _genreRepo = new GenreRepository(Context);
+            _uowRepo = new UnitOfWork(Context);
+            _authorService = new AuthorService(_authorRepo,_genreRepo,_uowRepo);
         }
 
         [Fact]
         public async Task CreateAuthor_Test()
         {
             // Arrange
-            AuthorForCreationDto authorDto = new Fixture().Create<AuthorForCreationDto>();
-            var author = authorDto.Adapt<Author>();
+            var countBeforeCreation = Context.Authors.ToList().Count;
+            var authorDto = new AuthorForCreationDto
+            {
+                Books=new List<AuthorBookForCreationDto>(),
+                FirstName="test",
+                LastName="test"
+            };
 
             // Act
             var createdEntity = await _authorService.CreateAsync(authorDto);
+            var countAfterCreation = Context.Authors.ToList().Count;
 
             // Assert
             Assert.NotNull(createdEntity);
+            Assert.Equal(countBeforeCreation+1, countAfterCreation);
         }
 
         [Fact]
         public async Task DeleteAuthor_Test()
         {
             // Arrange
-            var author = new Author { Id = 1 };
+            var id = 6;
 
             // Act
-            _authorService.DeleteAsync(1, CancellationToken.None);
-            //var createdEntity = _authorService.DeleteAsync(authorDto.Id);
+            var deletedEntity = await _authorService.DeleteAsync(id);
 
             // Assert
-            Assert.True(true);
+            Assert.Equal(1, deletedEntity);
+        }
+
+        [Fact]
+        public async Task GetAllAuthors_Test()
+        {
+            // Arrange
+
+            // Act
+            var authors = await _authorService.GetAllAsync();
+
+            // Assert
+            Assert.Equal(6, authors.Count());
+        }
+
+        [Fact]
+        public async Task GetAuthorWithBookById_Test()
+        {
+            // Arrange
+            int authorId = 1;
+
+            // Act
+            var author = await _authorService.GetAuthorBooksAsync(authorId);
+
+            // Assert
+            Assert.Equal(3, author.Books.Count());
+            Assert.NotNull(author.Books);
+        }
+
+        [Fact]
+        public async Task GetAllByCriteria_Test()
+        {
+            // Arrange
+            var authorOptions = new AuthorParameters
+            {
+                IsAsc = true,
+                OrderbyAlph = true,
+                WriteYear = "1992"
+            };
+
+            // Act
+            var author = await _authorService.GetAllByCriteriaAsync(authorOptions);
+           
+            // Assert
+            Assert.NotNull(author);
+            Assert.Equal(2, author.Count());
+        }
+
+        [Fact]
+        public async Task GetAuthorBookBySubstring_Test()
+        {
+            // Arrange
+            var substringOrTitle = "тишь";
+
+            // Act
+            var author = await _authorService.GetAuthorBookBySubstringAsync(substringOrTitle);
+
+            // Assert
+            Assert.NotNull(author);
         }
     }
 }

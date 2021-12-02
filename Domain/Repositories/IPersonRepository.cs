@@ -1,5 +1,6 @@
 ﻿using Domain.Entites;
 using Domain.RequestOptions;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System;
 using System.Collections.Generic;
@@ -37,7 +38,7 @@ namespace Domain.Repositories
         /// Method for deleting Person object
         /// </summary>
         /// <param name="entity">The Person object being deleting</param>
-        EntityEntry<Person> Delete(Person entity);
+        EntityState Delete(Person entity);
 
         /// <summary>
         /// Find by some criteria

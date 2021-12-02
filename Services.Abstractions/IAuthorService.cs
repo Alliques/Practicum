@@ -18,9 +18,9 @@ namespace Services.Abstractions
         Task<AuthorBookDto> CreateAsync(AuthorForCreationDto authorForCreationDto, 
             CancellationToken cancellationToken = default);
 
-        Task DeleteAsync(int authorId, CancellationToken cancellationToken = default);
+        Task<int> DeleteAsync(int authorId, CancellationToken cancellationToken = default);
 
-        Task<IEnumerable<AuthorDto>> GetAuthorBookSubstringAsync(string substring,
+        Task<IEnumerable<AuthorDto>> GetAuthorBookBySubstringAsync(string substring,
             CancellationToken cancellationToken = default);
     }
 }

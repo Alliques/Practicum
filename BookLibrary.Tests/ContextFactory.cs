@@ -47,6 +47,12 @@ namespace BookLibrary.Tests
                     FirstName = "Алексей",
                     LastName = "Калугин",
                     MiddleName = "Александрович",
+                },
+                new Author
+                {
+                    FirstName = "Test",
+                    LastName = "Test",
+                    MiddleName = "Test",
                 });
             #endregion
 
@@ -62,28 +68,45 @@ namespace BookLibrary.Tests
             context.Books.AddRange(
                 new Book
                 {
+                    WriteDate=new DateTime(1992,1,1),
                     Title = "Постоялый двор",
                     AuthorId = 1
                 },
                 new Book
                 {
+                    WriteDate = new DateTime(1992, 1, 1),
                     Title = "Затишье",
                     AuthorId = 1
                 },
                 new Book
                 {
+                    WriteDate = new DateTime(1934, 1, 1),
                     Title = "Одисея капитана Блада",
                     AuthorId = 3
                 },
                 new Book
                 {
+                    WriteDate = new DateTime(1982, 1, 1),
                     Title = "Собрание сочинений",
                     AuthorId = 2
                 },
                 new Book
                 {
+                    WriteDate = new DateTime(1992, 1, 1),
                     Title = "Пустые земли",
                     AuthorId = 4
+                },
+                new Book
+                {
+                    WriteDate = new DateTime(1992, 1, 1),
+                    Title = "Test",
+                    AuthorId = 4
+                },
+                new Book
+                {
+                    WriteDate = new DateTime(1992, 1, 1),
+                    Title = "Test2",
+                    AuthorId = 1
                 });
             #endregion
 
@@ -113,6 +136,14 @@ namespace BookLibrary.Tests
                 new Person
                 {
                     Id = 15,
+                    BirthDate = System.DateTime.Now,
+                    FirstName = "FN_NotWriter",
+                    MiddleName = "MN_NotWriter",
+                    LastName = "LN_NotWrite"
+                },
+                new Person
+                {
+                    Id = 16,
                     BirthDate = System.DateTime.Now,
                     FirstName = "FN_NotWriter",
                     MiddleName = "MN_NotWriter",

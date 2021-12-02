@@ -27,7 +27,7 @@ namespace BookLibrary.Tests.RepositoriesTests
             itemCount = authorBooks.Count();
 
             // Assert
-            Assert.Equal(5, itemCount);
+            Assert.Equal(6, itemCount);
         }
 
         [Fact]
@@ -69,14 +69,14 @@ namespace BookLibrary.Tests.RepositoriesTests
         public async Task DeleteAuthor_Test()
         {
             // Arrange
-            EntityEntry<Author> author = null;
 
             // Act
             AuthorRepository authorRepository = new AuthorRepository(Context);
-            author = authorRepository.Delete(await authorRepository.FindByIdAsync(2, CancellationToken.None));
+            var a = Context.Authors.ToList();
+            var authorState = authorRepository.Delete(await authorRepository.FindByIdAsync(1, CancellationToken.None));
             
             // Assert
-            Assert.Equal(EntityState.Deleted, author.State);
+            Assert.Equal(EntityState.Deleted, authorState);
         }
     }
 }

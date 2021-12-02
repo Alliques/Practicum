@@ -4,6 +4,7 @@ using Domain.Exceptions;
 using Domain.Repositories;
 using Domain.RequestOptions;
 using Mapster;
+using Microsoft.EntityFrameworkCore;
 using Services.Abstractions;
 using System;
 using System.Collections.Generic;
@@ -39,7 +40,7 @@ namespace Services
             return personEntity.Adapt<PersonDto>();
         }
 
-        public async Task DeleteAsync(int personId, CancellationToken cancellationToken = default)
+        public async Task<EntityState> DeleteAsync(int personId, CancellationToken cancellationToken = default)
         {
             var owner = await _personRepository.FindByIdAsync(personId, cancellationToken);
 
@@ -48,28 +49,33 @@ namespace Services
                 throw new PersonNotFoundException(personId);
             }
 
-            _personRepository.Delete(owner);
+            var state = _personRepository.Delete(owner);
 
             await _unitOfWork.SaveChangesAsync(cancellationToken);
+
+            return state;
         }
 
-        public async Task DeleteByFullNameAsync(string fullName, CancellationToken cancellationToken = default)
+        public async Task<EntityState> DeleteByFullNameAsync(string fullName, CancellationToken cancellationToken = default)
         {
             var personsToDelete = await _personRepository.FindByCondition(o=> (fullName.Contains(o.FirstName) &&
-            fullName.Contains(o.LastName) && (o.MiddleName != null && fullName.Contains(o.MiddleName))),
+            fullName.Contains(o.LastName) && (o.MiddleName!=null?fullName.Contains(o.MiddleName): true)),
             cancellationToken);
+            EntityState state = EntityState.Unchanged;
 
             if (!personsToDelete.Any())
             {
-                return;
+                return state;
             }
 
             foreach (var person in personsToDelete)
             {
-                _personRepository.Delete(person);
+                state = _personRepository.Delete(person);
             }
 
             await _unitOfWork.SaveChangesAsync(cancellationToken);
+
+            return state;
         }
 
         public async Task<IEnumerable<PersonDto>> GetAllAsync(PersonParametrs personParametrs, 
@@ -136,7 +142,7 @@ namespace Services
             return person.Adapt<PersonTakenBooksDto>();
         }
 
-        public async Task UpdateAsync(int personId, PersonForUpdateDto personForUpdateDto,
+        public async Task<int> UpdateAsync(int personId, PersonForUpdateDto personForUpdateDto,
             CancellationToken cancellationToken = default)
         {
             var person = await _personRepository.FindByIdAsync(personId, cancellationToken);
@@ -149,9 +155,8 @@ namespace Services
             person.FirstName = personForUpdateDto.FirstName;
             person.LastName = personForUpdateDto.LastName;
             person.MiddleName = personForUpdateDto.MiddleName;
-            //person.ChangingDate = System.DateTimeOffset.Now;
 
-            await _unitOfWork.SaveChangesAsync(cancellationToken);
+            return await _unitOfWork.SaveChangesAsync(cancellationToken);
         }
     }
 }

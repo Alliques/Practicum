@@ -25,9 +25,9 @@ namespace Persistence.Repositories
             return entity;
         }
 
-        public EntityEntry<Genre> Delete(Genre entity)
+        public EntityState Delete(Genre entity)
         {
-            return _repositoryContext.Genres.Remove(entity);
+            return _repositoryContext.Genres.Remove(entity).State;
         }
 
         public async Task<List<Genre>> FindAllAsync(CancellationToken cancellationToken,

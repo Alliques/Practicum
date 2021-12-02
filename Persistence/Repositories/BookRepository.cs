@@ -26,9 +26,9 @@ namespace Persistence.Repositories
             return _repositoryContext.Books.Add(entity).Entity;
         }
 
-        public EntityEntry<Book> Delete(Book entity)
+        public EntityState Delete(Book entity)
         {
-            return _repositoryContext.Books.Remove(entity);
+            return _repositoryContext.Books.Remove(entity).State;
         }
 
         public async Task<IEnumerable<Book>> FindAllAsync(CancellationToken cancellationToken)

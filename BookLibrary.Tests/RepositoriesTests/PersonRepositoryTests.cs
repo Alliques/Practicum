@@ -45,10 +45,10 @@ namespace BookLibrary.Tests.RepositoriesTests
             IPersonRepository personeRepository = new PersonRepository(Context);
 
             // Act
-            var person = personeRepository.Delete(await personeRepository.FindByIdAsync(2, CancellationToken.None));
+            var personState = personeRepository.Delete(await personeRepository.FindByIdAsync(2, CancellationToken.None));
 
             // Assert
-            Assert.Equal(EntityState.Deleted, person.State);
+            Assert.Equal(EntityState.Deleted, personState);
         }
 
         [Fact]

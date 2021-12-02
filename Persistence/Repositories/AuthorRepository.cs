@@ -26,9 +26,9 @@ namespace Persistence.Repositories
             return _repositoryContext.Authors.Add(entity).Entity; 
         }
 
-        public EntityEntry<Author> Delete(Author entity)
+        public EntityState Delete(Author entity)
         {
-            return _repositoryContext.Authors.Remove(entity);
+           return _repositoryContext.Authors.Remove(entity).State;
         }
 
         public async Task<IQueryable<Author>> FindAllAsync(CancellationToken cancellationToken)
