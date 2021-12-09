@@ -1,6 +1,7 @@
 ﻿using Domain.Entites;
 using Domain.Repositories;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -19,16 +20,15 @@ namespace Persistence.Repositories
 
         public Book Create(Book entity)
         {
-            //entity.ChangingDate = System.DateTimeOffset.Now;
-            //entity.CreationDate = System.DateTimeOffset.Now;
-            _repositoryContext.Books.Add(entity);
+            entity.ChangingDate = System.DateTimeOffset.Now;
+            entity.CreationDate = System.DateTimeOffset.Now;
 
-            return entity;
+            return _repositoryContext.Books.Add(entity).Entity;
         }
 
-        public void Delete(Book entity)
+        public EntityState Delete(Book entity)
         {
-            _repositoryContext.Books.Remove(entity);
+            return _repositoryContext.Books.Remove(entity).State;
         }
 
         public async Task<IEnumerable<Book>> FindAllAsync(CancellationToken cancellationToken)

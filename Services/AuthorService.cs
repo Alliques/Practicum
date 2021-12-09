@@ -30,9 +30,7 @@ namespace Services
         {
 
             var author = authorForCreationDto.Adapt<Author>();
-            author.CreationDate = System.DateTimeOffset.Now;
-            author.ChangingDate = System.DateTimeOffset.Now;
-
+            
             if (author.Books.Select(o => o.Genres).Any())
             {
                 for (int i = 0; i < author.Books.Count; i++)
@@ -55,7 +53,7 @@ namespace Services
             return author.Adapt<AuthorBookDto>();
         }
 
-        public async Task DeleteAsync(int authorId, CancellationToken cancellationToken = default)
+        public async Task<int> DeleteAsync(int authorId, CancellationToken cancellationToken = default)
         {
             var author = await _authorRepository.FindByIdAsync(authorId, cancellationToken);
 
@@ -64,14 +62,14 @@ namespace Services
                 throw new BookNotFoundException(authorId);
             }
 
-            if(author.Books.Any())
+            if (author.Books.Any())
             {
                 throw new DeletingException($"The author with {authorId}-id has books.");
             }
 
             _authorRepository.Delete(author);
 
-            await _unitOfWork.SaveChangesAsync(cancellationToken);
+            return await _unitOfWork.SaveChangesAsync(cancellationToken);
         }
 
         public async Task<IEnumerable<AuthorDto>> GetAllAsync(CancellationToken cancellationToken = default)
@@ -121,7 +119,7 @@ namespace Services
             return authorDto;
         }
 
-        public async Task<IEnumerable<AuthorDto>> GetAuthorBookSubstringAsync(string substring,
+        public async Task<IEnumerable<AuthorDto>> GetAuthorBookBySubstringAsync(string substring,
             CancellationToken cancellationToken = default)
         {
             var author = await _authorRepository.FindAllAsync(cancellationToken);

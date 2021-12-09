@@ -1,6 +1,7 @@
 ﻿using Domain.Entites;
 using Domain.Repositories;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -24,9 +25,9 @@ namespace Persistence.Repositories
             return entity;
         }
 
-        public void Delete(Genre entity)
+        public EntityState Delete(Genre entity)
         {
-            _repositoryContext.Genres.Remove(entity);
+            return _repositoryContext.Genres.Remove(entity).State;
         }
 
         public async Task<List<Genre>> FindAllAsync(CancellationToken cancellationToken,

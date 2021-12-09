@@ -20,6 +20,7 @@ namespace Persistence
         public virtual DbSet<Book> Books { get; set; }
         public virtual DbSet<Genre> Genres { get; set; }
         public virtual DbSet<LibraryCard> LibraryCards { get; set; }
+        public virtual DbSet<BookGenre> BookGenres { get; set; }
         public virtual DbSet<Person> Persons { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

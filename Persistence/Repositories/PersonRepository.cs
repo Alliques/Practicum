@@ -2,6 +2,7 @@
 using Domain.Repositories;
 using Domain.RequestOptions;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,29 +28,38 @@ namespace Persistence.Repositories
             return entity;
         }
 
-        public void Delete(Person entity)
+        public EntityState Delete(Person entity)
         {
-            _repositoryContext.Persons.Remove(entity);
+            return _repositoryContext.Persons.Remove(entity).State;
         }
 
-        public async Task<IEnumerable<Person>> FindAllAsync(PersonParametrs personParametrs,
+        public async Task<IQueryable<Person>> FindAllAsync(PersonParametrs personParametrs,
             CancellationToken cancellationToken)
         {
-            List<Person> persons=new List<Person>();
-            if (personParametrs.SearchInName != null)
+            List<Person> persons;
+            personParametrs.SearchInName = personParametrs.SearchInName.ToLower();
+
+            if (personParametrs.SearchInName != string.Empty)
             {
                 persons = await _repositoryContext.Persons.Where(o =>
-                o.FirstName.Contains(personParametrs.SearchInName) ||
-                o.LastName.Contains(personParametrs.SearchInName) ||
-                o.MiddleName.Contains(personParametrs.SearchInName))
+                o.FirstName.ToLower().Contains(personParametrs.SearchInName) ||
+                o.LastName.ToLower().Contains(personParametrs.SearchInName) ||
+                o.MiddleName.ToLower().Contains(personParametrs.SearchInName))
                     .ToListAsync(cancellationToken);
+            }
+            else
+            {
+                persons = await _repositoryContext.Persons.ToListAsync();
             }
 
             if (personParametrs.ShowWriters)
             {
-                return persons.Where(o => _repositoryContext.Books.Where(b => b.AuthorId == o.Id).Any()).ToList();
+                return persons.Where(o => _repositoryContext.Books
+                .Where(b => b.AuthorId == o.Id)
+                .Any())
+                    .AsQueryable();
             }
-            return persons;
+            return persons.AsQueryable();
         }
 
         public async Task<Person> FindByIdAsync(int id, CancellationToken cancellationToken, 

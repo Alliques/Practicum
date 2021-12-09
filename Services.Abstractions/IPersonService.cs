@@ -1,5 +1,6 @@
 ﻿using Contracts;
 using Domain.RequestOptions;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -14,12 +15,12 @@ namespace Services.Abstractions
 
         Task<PersonDto> CreateAsync(PersonForCreationDto personForCreationDto, CancellationToken cancellationToken = default);
 
-        Task UpdateAsync(int personId, PersonForUpdateDto personForUpdateDto,
+        Task<int> UpdateAsync(int personId, PersonForUpdateDto personForUpdateDto,
             CancellationToken cancellationToken = default);
 
-        Task DeleteAsync(int personId, CancellationToken cancellationToken = default);
+        Task<EntityState> DeleteAsync(int personId, CancellationToken cancellationToken = default);
 
-        Task DeleteByFullNameAsync(string fullName, CancellationToken cancellationToken = default);
+        Task<EntityState> DeleteByFullNameAsync(string fullName, CancellationToken cancellationToken = default);
 
         Task<IEnumerable<BookDto>> GetTakenBooks(int id, CancellationToken cancellationToken = default);
 
