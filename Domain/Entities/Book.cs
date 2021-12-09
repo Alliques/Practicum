@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace Domain.Entites
 {
-    public partial class Book: BaseEntity
+    public partial class Book : BaseEntity
     {
         public int Id { get; set; }
         public string Title { get; set; }

@@ -1,4 +1,6 @@
 ﻿using Domain.Entites;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -29,6 +31,6 @@ namespace Domain.Repositories
         /// Method for deleting Authors object
         /// </summary>
         /// <param name="entity">The Authors object being deleting</param>
-        void Delete(Author entity);
+        EntityState Delete(Author entity);
     }
 }

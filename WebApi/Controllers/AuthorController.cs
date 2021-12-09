@@ -85,7 +85,7 @@ namespace WebApi.Controllers
         [HttpGet("{substring}")]
         public async Task<IActionResult> GetAllAuthors(string substring, CancellationToken cancellationToken)
         {
-            var books = await _authorService.GetAuthorBookSubstringAsync(substring, cancellationToken);
+            var books = await _authorService.GetAuthorBookBySubstringAsync(substring, cancellationToken);
 
             return Ok(books);
         }
